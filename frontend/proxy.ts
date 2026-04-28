@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CSRF_COOKIE_NAME } from "@/lib/security-constants";
-import { legacyBaseUrl } from "@/lib/platform";
-import { DASHBOARD_SESSION_HEADER, encodeSessionHeader } from "@/lib/session-header";
 
+const CSRF_COOKIE_NAME = "labayh_csrf";
+const DASHBOARD_SESSION_HEADER = "x-labayh-session";
+const DEFAULT_LEGACY_BASE_URL = "http://127.0.0.1:8000";
 const PROTECTED_PREFIXES = ["/api/v1/dashboard", "/api/bookings", "/api/finance"];
 const ADMIN_PREFIXES = ["/api/admin", "/api/settings", "/api/seo"];
 const STATE_CHANGING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
@@ -18,6 +18,7 @@ const PUBLIC_API_ROUTES = new Set([
   "/api/seo/robots.txt",
   "/api/seo/sitemap.xml",
 ]);
+const legacyBaseUrl = normalizeBaseUrl(process.env.NEXT_PUBLIC_LEGACY_BASE_URL || DEFAULT_LEGACY_BASE_URL);
 const legacyOrigin = new URL(legacyBaseUrl).origin;
 const configuredTrustedOrigins = (process.env.TRUSTED_ORIGINS ?? "")
   .split(",")
@@ -31,6 +32,14 @@ function createToken() {
   const bytes = new Uint8Array(24);
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function normalizeBaseUrl(url: string) {
+  return url.replace(/\/+$/, "");
+}
+
+function encodeSessionHeader(session: unknown) {
+  return encodeURIComponent(JSON.stringify(session));
 }
 
 async function getSession(request: NextRequest) {
@@ -60,7 +69,7 @@ function isAdminSession(session: { roles?: unknown } | null) {
   return roles.some((role) => ["administrator", "admin", "superadmin"].includes(role));
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const protectedRoute = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
   const adminRoute =
