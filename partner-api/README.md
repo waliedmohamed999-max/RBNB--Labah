@@ -27,6 +27,8 @@ $env:ADMIN_PASSWORD="<strong-password>"
 npm run seed:admin
 ```
 
+
+> ملاحظة: `<strong-password>` في الأمثلة مجرد placeholder عند إنشاء أدمن للـ Partner API. في نسخة Vercel الحالية يمكن دخول لوحة الموقع من `/auth/login` باستخدام: `admin@labayh.local` / `password` إلى أن يتم ربط Laravel/قاعدة البيانات الإنتاجية.
 ## أهم المسارات
 
 - `POST /auth/register-partner`

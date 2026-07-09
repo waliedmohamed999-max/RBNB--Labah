@@ -363,7 +363,7 @@ export function AuthAccessPanel({ returnUrl = "/", initialMode = "login", brandN
                 <label className="mb-2 block text-sm font-bold text-gray-800">البريد الإلكتروني</label>
                 <div className="relative">
                   <FieldIcon><Mail className="size-4" /></FieldIcon>
-                  <input dir="ltr" type="email" value={login.email} onChange={(event) => setLogin({ ...login, email: event.target.value })} placeholder="example@email.com" className={`${inputBase} pl-10 ${errors.loginEmail ? invalid : login.email ? valid : neutral}`} />
+                  <input dir="ltr" type="email" value={login.email} onChange={(event) => setLogin({ ...login, email: event.target.value })} placeholder="admin@labayh.local" className={`${inputBase} pl-10 ${errors.loginEmail ? invalid : login.email ? valid : neutral}`} />
                 </div>
                 <ErrorText message={errors.loginEmail} />
               </div>
@@ -388,6 +388,7 @@ export function AuthAccessPanel({ returnUrl = "/", initialMode = "login", brandN
               <button disabled={isPending} className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#FF385C] py-3 text-base font-bold text-white transition hover:bg-[#E31C5F] disabled:opacity-60">
                 {isPending ? <><Spinner /> جار تسجيل الدخول...</> : "تسجيل الدخول"}
               </button>
+              <p className="text-center text-xs font-bold text-gray-500">بيانات الأدمن المحلي: admin@labayh.local / password</p>
               <div className="flex items-center gap-3"><div className="flex-1 border-t border-gray-200" /><span className="text-xs text-gray-400">أو</span><div className="flex-1 border-t border-gray-200" /></div>
               {/* TODO: Enable Google and Apple buttons when OAuth provider keys are configured. */}
               <div className="grid gap-3 sm:grid-cols-2">

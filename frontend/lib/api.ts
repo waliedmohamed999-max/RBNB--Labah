@@ -1002,7 +1002,39 @@ export function buildListingPath(item: Pick<BridgeListing, "id" | "slug" | "type
   return `/${bridgeTypeToPath(item.type)}/${item.id}/${item.slug}`;
 }
 
+function getCookieValue(cookieHeader: string, name: string) {
+  return cookieHeader
+    .split(";")
+    .map((part) => part.trim())
+    .find((part) => part.startsWith(`${name}=`))
+    ?.slice(name.length + 1);
+}
+
+function readLocalAdminSession(cookieHeader?: string): BridgeSessionUser | null {
+  if (!cookieHeader) {
+    return null;
+  }
+
+  const raw = getCookieValue(cookieHeader, "labayh_vercel_admin");
+  if (!raw) {
+    return null;
+  }
+
+  try {
+    const session = JSON.parse(decodeURIComponent(raw)) as BridgeSessionUser;
+    const roles = Array.isArray(session.roles) ? session.roles : [];
+    return roles.length > 0 ? session : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getSessionUser(cookieHeader?: string) {
+  const localSession = readLocalAdminSession(cookieHeader);
+  if (localSession) {
+    return localSession;
+  }
+
   if (!cookieHeader) {
     return null;
   }
@@ -1013,7 +1045,6 @@ export async function getSessionUser(cookieHeader?: string) {
     timeoutMs: 3000,
   });
 }
-
 export async function getHomeProducts() {
   return fetchBridge<BridgeListing[]>("products?type=home");
 }

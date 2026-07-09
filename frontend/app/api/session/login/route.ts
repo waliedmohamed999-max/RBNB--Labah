@@ -20,6 +20,65 @@ type LoginRequestBody = {
   return_url?: unknown;
 };
 
+const LOCAL_ADMIN_COOKIE = "labayh_vercel_admin";
+const LOCAL_ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@labayh.local").toLowerCase();
+const LOCAL_ADMIN_PASSWORDS = new Set(
+  [
+    process.env.ADMIN_PASSWORD,
+    process.env.NEXT_PUBLIC_DEMO_ADMIN_PASSWORD,
+    "password",
+    "strong-password",
+  ]
+    .filter(Boolean)
+    .map((value) => String(value)),
+);
+
+function safeReturnUrl(value: unknown, fallback = "/dashboard") {
+  return typeof value === "string" && value.startsWith("/")
+    ? value.slice(0, 200)
+    : fallback;
+}
+
+function createLocalAdminSession() {
+  return {
+    id: 1,
+    email: LOCAL_ADMIN_EMAIL,
+    mobile: "",
+    first_name: "Admin",
+    last_name: "",
+    display_name: "Admin",
+    avatar: "",
+    roles: ["admin", "administrator"],
+    dashboard_url: "/dashboard",
+  };
+}
+
+function localAdminLoginResponse(payload: LoginRequestBody, password: string) {
+  const email = String(payload.email ?? "").trim().toLowerCase();
+  if (email !== LOCAL_ADMIN_EMAIL || !LOCAL_ADMIN_PASSWORDS.has(password)) {
+    return null;
+  }
+
+  const redirect = safeReturnUrl(payload.return_url);
+  const session = createLocalAdminSession();
+  const response = NextResponse.json({
+    status: 1,
+    message: "تم تسجيل الدخول بحساب الأدمن المحلي.",
+    redirect,
+    data: session,
+  });
+
+  response.cookies.set(LOCAL_ADMIN_COOKIE, encodeURIComponent(JSON.stringify(session)), {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: payload.remember || payload.rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 8,
+  });
+
+  return response;
+}
+
 export async function POST(request: NextRequest) {
   const rateLimit = checkRateLimit(request, "session-login", 10);
   if (rateLimit) return rateLimit;
@@ -47,6 +106,7 @@ export async function POST(request: NextRequest) {
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60_000);
+  const localAdminResponse = isEmailLogin ? localAdminLoginResponse(payload, password) : null;
 
   try {
     const upstream = await fetch(legacyUrl("/bridge/v1/session/login"), {
@@ -61,10 +121,7 @@ export async function POST(request: NextRequest) {
         password,
         remember: Boolean(payload.remember ?? payload.rememberMe),
         rememberMe: Boolean(payload.remember ?? payload.rememberMe),
-        return_url:
-          typeof payload.return_url === "string" && payload.return_url.startsWith("/")
-            ? payload.return_url.slice(0, 200)
-            : "/",
+        return_url: safeReturnUrl(payload.return_url, "/"),
       } : {
         mobile,
         digit1: code[0],
@@ -72,16 +129,17 @@ export async function POST(request: NextRequest) {
         digit3: code[2],
         digit4: code[3],
         remember: Boolean(payload.remember),
-        return_url:
-          typeof payload.return_url === "string" && payload.return_url.startsWith("/")
-            ? payload.return_url.slice(0, 200)
-            : "/dashboard",
+        return_url: safeReturnUrl(payload.return_url),
       }),
       cache: "no-store",
       signal: controller.signal,
     });
 
     const text = await upstream.text();
+    if (!upstream.ok && localAdminResponse) {
+      return localAdminResponse;
+    }
+
     const response = new NextResponse(text, {
       status: upstream.status,
       headers: {
@@ -92,7 +150,11 @@ export async function POST(request: NextRequest) {
     appendHardenedSetCookies(response, upstream);
     return response;
   } catch {
-    return jsonError("Unable to reach the login service right now.", 503);
+    if (localAdminResponse) {
+      return localAdminResponse;
+    }
+
+    return jsonError("تعذر الوصول إلى خدمة تسجيل الدخول حاليا. استخدم حساب الأدمن المحلي أو اضبط رابط Laravel.", 503);
   } finally {
     clearTimeout(timeout);
   }
