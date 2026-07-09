@@ -14,9 +14,16 @@ function safeMode(value?: string | string[]) {
   return mode === "register" || mode === "partner" ? mode : "login";
 }
 
+function safeReturnUrl(value?: string | string[]) {
+  const url = Array.isArray(value) ? value[0] : value;
+  return typeof url === "string" && url.startsWith("/") && !url.startsWith("//") ? url : "/";
+}
+
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const headerStore = await headers();
   const cookieHeader = headerStore.get("cookie") ?? "";
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const returnUrl = safeReturnUrl(resolvedSearchParams.return_url);
   const [currentUser, publicSettings] = await Promise.all([
     getSessionUser(cookieHeader),
     getPublicSystemSettings(),
@@ -24,14 +31,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
   const siteBrand = resolveBrand(publicSettings);
 
   if (currentUser) {
-    redirect("/");
+    redirect(returnUrl === "/" ? currentUser.dashboard_url || "/dashboard" : returnUrl);
   }
-
-  const resolvedSearchParams = (await searchParams) ?? {};
-  const returnUrl =
-    (Array.isArray(resolvedSearchParams.return_url)
-      ? resolvedSearchParams.return_url[0]
-      : resolvedSearchParams.return_url) || "/";
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,#fff5f6_0%,#f8f8f6_48%,#eef2ff_100%)] text-slate-950">
