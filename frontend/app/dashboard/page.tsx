@@ -51,40 +51,50 @@ export default async function DashboardPage() {
     getPublicSystemSettings(),
   ]);
 
-  if (!currentUser || !summary) {
+  if (!currentUser) {
     return null;
   }
 
+  const dashboardSummary = summary ?? {
+    role: "admin",
+    bookings_count: 0,
+    pending_count: 0,
+    completed_count: 0,
+    wishlist_count: 0,
+    gross_total: 0,
+    currency: "SAR",
+    quick_links: [],
+  };
+
   const siteBrand = resolveBrand(publicSettings);
   const displayName = displayText(currentUser.display_name, "مستخدم لبيه");
-  const completedRate = progressValue(summary.completed_count, summary.bookings_count);
-  const pendingRate = progressValue(summary.pending_count, summary.bookings_count);
-
+  const completedRate = progressValue(dashboardSummary.completed_count, dashboardSummary.bookings_count);
+  const pendingRate = progressValue(dashboardSummary.pending_count, dashboardSummary.bookings_count);
   const stats = [
     {
       label: "إجمالي الحجوزات",
-      value: numberValue(summary.bookings_count),
-      hint: `${numberValue(summary.completed_count)} مكتملة`,
+      value: numberValue(dashboardSummary.bookings_count),
+      hint: `${numberValue(dashboardSummary.completed_count)} مكتملة`,
       icon: ListChecks,
       tone: "bg-[#FF385C]/10 text-[#FF385C]",
     },
     {
       label: "الحجوزات المعلقة",
-      value: numberValue(summary.pending_count),
+      value: numberValue(dashboardSummary.pending_count),
       hint: `${pendingRate}% من الإجمالي`,
       icon: Clock3,
       tone: "bg-amber-50 text-amber-700",
     },
     {
       label: "العناصر المفضلة",
-      value: numberValue(summary.wishlist_count),
+      value: numberValue(dashboardSummary.wishlist_count),
       hint: "اهتمامات العملاء",
       icon: Heart,
       tone: "bg-rose-50 text-rose-600",
     },
     {
       label: "القيمة الإجمالية",
-      value: formatMoney(summary.gross_total, summary.currency),
+      value: formatMoney(dashboardSummary.gross_total, dashboardSummary.currency),
       hint: "من بيانات النظام",
       icon: Wallet,
       tone: "bg-emerald-50 text-emerald-700",
@@ -132,7 +142,7 @@ export default async function DashboardPage() {
   ];
 
   const checklist = [
-    { label: "مراجعة الحجوزات المعلقة", value: summary.pending_count ? `${numberValue(summary.pending_count)} تحتاج متابعة` : "لا توجد حجوزات معلقة", done: summary.pending_count === 0 },
+    { label: "مراجعة الحجوزات المعلقة", value: dashboardSummary.pending_count ? `${numberValue(dashboardSummary.pending_count)} تحتاج متابعة` : "لا توجد حجوزات معلقة", done: dashboardSummary.pending_count === 0 },
     { label: "تحديث بيانات الحساب", value: "تحقق من البريد والرقم والصورة", done: Boolean(displayName) },
     { label: "مراجعة أدوات الدفع", value: "تأكد من بوابات الدفع النشطة", done: true },
     { label: "مراقبة أداء الواجهة", value: "راجع الإعدادات والروابط المهمة", done: true },
@@ -159,14 +169,14 @@ export default async function DashboardPage() {
           <div className="mt-8 grid gap-3 md:grid-cols-3">
             <HeroSignal icon={ShieldCheck} label="حالة النظام" value="مستقر" />
             <HeroSignal icon={TrendingUp} label="اكتمال الحجوزات" value={`${completedRate}%`} />
-            <HeroSignal icon={Bell} label="التنبيهات الحرجة" value={summary.pending_count ? `${numberValue(summary.pending_count)}` : "0"} />
+            <HeroSignal icon={Bell} label="التنبيهات الحرجة" value={dashboardSummary.pending_count ? `${numberValue(dashboardSummary.pending_count)}` : "0"} />
           </div>
         </div>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {stats.map((item) => (
-          <StatCard key={item.label} {...item} role={summary.role} />
+          <StatCard key={item.label} {...item} role={dashboardSummary.role} />
         ))}
       </section>
 
@@ -208,14 +218,14 @@ export default async function DashboardPage() {
         <article className="rounded-3xl border border-slate-100 bg-white p-6 shadow-sm">
           <SectionTitle title="حالة الحجوزات" subtitle="نظرة سريعة على حجم العمل الحالي." />
           <div className="mt-6 space-y-5">
-            <ProgressRow label="مكتملة" value={summary.completed_count} total={summary.bookings_count} color="bg-emerald-500" />
-            <ProgressRow label="معلقة" value={summary.pending_count} total={summary.bookings_count} color="bg-[#FF385C]" />
-            <ProgressRow label="إجمالي" value={summary.bookings_count} total={summary.bookings_count || 1} color="bg-[#1a1f36]" />
+            <ProgressRow label="مكتملة" value={dashboardSummary.completed_count} total={dashboardSummary.bookings_count} color="bg-emerald-500" />
+            <ProgressRow label="معلقة" value={dashboardSummary.pending_count} total={dashboardSummary.bookings_count} color="bg-[#FF385C]" />
+            <ProgressRow label="إجمالي" value={dashboardSummary.bookings_count} total={dashboardSummary.bookings_count || 1} color="bg-[#1a1f36]" />
           </div>
           <div className="mt-6 rounded-2xl bg-slate-50 p-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-slate-500">القيمة الحالية</span>
-              <b className="text-slate-950">{formatMoney(summary.gross_total, summary.currency)}</b>
+              <b className="text-slate-950">{formatMoney(dashboardSummary.gross_total, dashboardSummary.currency)}</b>
             </div>
           </div>
         </article>
