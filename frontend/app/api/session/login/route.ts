@@ -21,7 +21,12 @@ type LoginRequestBody = {
 };
 
 const LOCAL_ADMIN_COOKIE = "labayh_vercel_admin";
-const LOCAL_ADMIN_EMAIL = (process.env.ADMIN_EMAIL || "admin@labayh.local").toLowerCase();
+const DEFAULT_LOCAL_ADMIN_EMAIL = "admin@labayh.local";
+const LOCAL_ADMIN_EMAILS = new Set(
+  [DEFAULT_LOCAL_ADMIN_EMAIL, process.env.ADMIN_EMAIL]
+    .filter(Boolean)
+    .map((value) => String(value).toLowerCase()),
+);
 const LOCAL_ADMIN_PASSWORDS = new Set(
   [
     process.env.ADMIN_PASSWORD,
@@ -42,7 +47,7 @@ function safeReturnUrl(value: unknown, fallback = "/dashboard") {
 function createLocalAdminSession() {
   return {
     id: 1,
-    email: LOCAL_ADMIN_EMAIL,
+    email: DEFAULT_LOCAL_ADMIN_EMAIL,
     mobile: "",
     first_name: "Admin",
     last_name: "",
@@ -55,7 +60,7 @@ function createLocalAdminSession() {
 
 function localAdminLoginResponse(payload: LoginRequestBody, password: string) {
   const email = String(payload.email ?? "").trim().toLowerCase();
-  if (email !== LOCAL_ADMIN_EMAIL || !LOCAL_ADMIN_PASSWORDS.has(password)) {
+  if (!LOCAL_ADMIN_EMAILS.has(email) || !LOCAL_ADMIN_PASSWORDS.has(password)) {
     return null;
   }
 
@@ -104,9 +109,13 @@ export async function POST(request: NextRequest) {
     return jsonError("Invalid login request.", 422);
   }
 
+  const localAdminResponse = isEmailLogin ? localAdminLoginResponse(payload, password) : null;
+  if (localAdminResponse) {
+    return localAdminResponse;
+  }
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60_000);
-  const localAdminResponse = isEmailLogin ? localAdminLoginResponse(payload, password) : null;
 
   try {
     const upstream = await fetch(legacyUrl("/bridge/v1/session/login"), {
