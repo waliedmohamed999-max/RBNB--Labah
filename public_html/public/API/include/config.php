@@ -1,10 +1,10 @@
 <?php
  
 
-$db_server = getenv('API_DB_HOST') ?: getenv('DB_HOST') ?: 'localhost';
-$db_name = getenv('API_DB_DATABASE') ?: getenv('DB_DATABASE') ?: '';
-$db_username = getenv('API_DB_USERNAME') ?: getenv('DB_USERNAME') ?: '';
-$db_password = getenv('API_DB_PASSWORD') ?: getenv('DB_PASSWORD') ?: '';
+$db_server="localhost"; # اسم السيرفر المستضيف لقاعدة البيانات في الغالب يتم تركها كما هيا
+$db_name="blagatn_2030_app"; # اسم قاعدة البيانات
+$db_username="blagatn_2030_app"; # اسم المستخدم لقاعدة البيانات
+$db_password="B147852b@"; # كلمة المرور لقاعدة البيانات
 
 $cookie_name_username = "username";
 $cookie_name_password = "password";

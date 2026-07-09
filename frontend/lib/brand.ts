@@ -1,4 +1,5 @@
 import type { BridgeSystemSettings } from "@/lib/api";
+import { displayText } from "@/lib/text";
 
 export const brand = {
   nameAr: "لبية",
@@ -11,7 +12,7 @@ export const brand = {
 export const brandTitle = `${brand.nameAr} | ${brand.nameEn}`;
 
 function text(value: unknown, fallback: string) {
-  return typeof value === "string" && value.trim() ? value.trim() : fallback;
+  return displayText(value, fallback);
 }
 
 export function resolveBrand(settings?: Partial<BridgeSystemSettings> | null) {

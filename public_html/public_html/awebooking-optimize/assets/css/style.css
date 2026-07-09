@@ -1,0 +1,90 @@
+.optimize-container {
+  width: 100%;
+  margin: 30px auto;
+  max-width: 650px;
+  background-color: #021638;
+  background-image: -webkit-gradient(linear, left top, right top, from(#021638), to(#062f63));
+  background-image: linear-gradient(90deg, #021638 0%, #062f63 100%);
+  background-size: contain;
+  -webkit-box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+          box-shadow: 0 0 35px 0 rgba(154, 161, 171, 0.15);
+  border: 5px solid #FFF;
+  border-radius: 10px; }
+  .optimize-container .heading {
+    margin-top: 30px;
+    text-align: center;
+    color: #FFF;
+    border-bottom: 1px solid #1F345E;
+    padding-bottom: 20px; }
+  .optimize-container .optimize-button {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #17939c;
+    background-color: #0b1f50;
+    background-image: -webkit-gradient(linear, left bottom, left top, from(#0b1f50), to(#0d3a6d));
+    background-image: linear-gradient(0deg, #0b1f50 0%, #0d3a6d 100%);
+    color: #FFF;
+    font-size: 18px;
+    text-transform: uppercase;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    font-weight: 500; }
+    .optimize-container .optimize-button:focus {
+      -webkit-box-shadow: none;
+              box-shadow: none;
+      text-decoration: none; }
+  .optimize-container .col-right {
+    padding-top: 30px;
+    padding-bottom: 30px; }
+    .optimize-container .col-right .optimize-item {
+      padding-left: 20px; }
+      .optimize-container .col-right .optimize-item:not(:last-child) {
+        margin-bottom: 20px; }
+      .optimize-container .col-right .optimize-item label {
+        color: #FFF; }
+      .optimize-container .col-right .optimize-item .count {
+        margin-left: 8px;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 50%;
+        -webkit-box-shadow: 0 0 0 1px #36ff80;
+                box-shadow: 0 0 0 1px #36ff80;
+        font-size: 0.6rem; }
+        .optimize-container .col-right .optimize-item .count.has-item {
+          -webkit-box-shadow: 0 0 0 1px #ff7823;
+                  box-shadow: 0 0 0 1px #ff7823; }
+        .optimize-container .col-right .optimize-item .count i {
+          color: #36ff80; }
+      .optimize-container .col-right .optimize-item label {
+        font-weight: 300; }
+  .optimize-container .col-left {
+    padding: 30px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center; }
+  .optimize-container .optimize-footer {
+    border-top: 1px solid #1F345E;
+    padding: 25px 20px; }
+
+.awe-booking.rtl .optimize-container .col-right .optimize-item {
+  padding-left: 0;
+  padding-right: 20px; }
+
+/*# sourceMappingURL=style.css.map */

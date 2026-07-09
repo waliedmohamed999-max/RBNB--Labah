@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { resolveBrand } from "@/lib/brand";
-import { getPublicMenus, getPublicSystemSettings, type BridgeMenuItem } from "@/lib/api";
+import { getPublicMenus, getPublicSystemSettings, type BridgeMenuItem, type BridgeSystemSettings } from "@/lib/api";
 import { legacyUrl } from "@/lib/platform";
 
 type FooterLink = {
@@ -29,23 +29,32 @@ function normalizeFooterItems(items: BridgeMenuItem[], group: string, fallback: 
   return fallback.map((item) => ({ ...item, target: "_self" }));
 }
 
-export async function Footer() {
-  const [settings, footerMenus] = await Promise.all([getPublicSystemSettings(), getPublicMenus("footer")]);
-  const footerItems = footerMenus?.[0]?.items ?? [];
-  const siteBrand = resolveBrand(settings);
-  const sectionsTitle = settings?.footer_sections_title || "الأقسام";
-  const accountTitle = settings?.footer_account_title || "الحساب";
-  const newsletterTitle = settings?.footer_newsletter_title || "النشرة البريدية";
+export async function Footer({
+  settings,
+  footerItems,
+}: {
+  settings?: BridgeSystemSettings | null;
+  footerItems?: BridgeMenuItem[];
+} = {}) {
+  const [resolvedSettings, resolvedFooterMenus] =
+    settings !== undefined && footerItems !== undefined
+      ? [settings, [{ items: footerItems }]]
+      : await Promise.all([getPublicSystemSettings(), getPublicMenus("footer")]);
+  const resolvedFooterItems = resolvedFooterMenus?.[0]?.items ?? [];
+  const siteBrand = resolveBrand(resolvedSettings);
+  const sectionsTitle = resolvedSettings?.footer_sections_title || "الأقسام";
+  const accountTitle = resolvedSettings?.footer_account_title || "الحساب";
+  const newsletterTitle = resolvedSettings?.footer_newsletter_title || "النشرة البريدية";
   const newsletterText =
-    settings?.footer_newsletter_text ||
+    resolvedSettings?.footer_newsletter_text ||
     `أدخل بريدك ليصلك جديد العروض والإقامات المميزة من ${siteBrand.nameAr}.`;
-  const sections = normalizeFooterItems(footerItems, "sections", [
+  const sections = normalizeFooterItems(resolvedFooterItems, "sections", [
     { name: "الرئيسية", url: "/" },
     { name: "الشاليهات والفلل", url: "/home-search-result" },
     { name: "التجارب", url: "/experience-search-result" },
     { name: "الفعاليات والمؤتمرات", url: "/experience-search-result?category=events" },
   ]);
-  const account = normalizeFooterItems(footerItems, "account", [
+  const account = normalizeFooterItems(resolvedFooterItems, "account", [
     { name: "لوحة التحكم", url: "/dashboard" },
     { name: "تسجيل الدخول", url: "/auth/login" },
     { name: "إنشاء حساب", url: "/auth/sign-up" },

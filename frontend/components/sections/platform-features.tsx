@@ -81,13 +81,19 @@ function normalizeFeatures(menuItems: BridgeMenuItem[]): PlatformFeature[] {
 
   return menuItems
     .filter((item) => item.is_active !== 0)
-    .map((item, index) => ({
-      title: item.name || fallbackFeatures[index % fallbackFeatures.length].title,
-      description:
-        getStringMetadata(item, "description") ||
-        fallbackFeatures[index % fallbackFeatures.length].description,
-      icon: iconMap[item.icon || ""] ?? fallbackFeatures[index % fallbackFeatures.length].icon,
-    }));
+    .map((item, index) => {
+      const iconName = item.icon || "";
+      const fallbackIcon = fallbackFeatures[index % fallbackFeatures.length].icon;
+      // إذا لم تكن الأيقونة معرفة بشكل صحيح استخدم Star
+      const icon = iconMap[iconName] || fallbackIcon || Star;
+      return {
+        title: item.name || fallbackFeatures[index % fallbackFeatures.length].title,
+        description:
+          getStringMetadata(item, "description") ||
+          fallbackFeatures[index % fallbackFeatures.length].description,
+        icon,
+      };
+    });
 }
 
 export function PlatformFeaturesSection({ menuItems = [] }: PlatformFeaturesSectionProps) {

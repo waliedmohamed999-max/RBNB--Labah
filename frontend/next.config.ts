@@ -4,11 +4,9 @@ import { legacyBaseUrl } from "./lib/platform";
 const legacyUrl = new URL(legacyBaseUrl);
 const siteUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000");
 const trustedOrigins = [siteUrl.origin, legacyUrl.origin].join(" ");
-const scriptSrc =
-  process.env.NODE_ENV === "development"
-    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
-    : "script-src 'self' 'unsafe-inline'";
+const isProduction = process.env.NODE_ENV === "production";
 
+// TODO(security): replace unsafe-inline CSP entries with nonces/hashes once all inline Next/runtime styles are audited.
 const securityHeaders = [
   {
     key: "Content-Security-Policy",
@@ -18,12 +16,12 @@ const securityHeaders = [
       "object-src 'none'",
       "frame-ancestors 'none'",
       "form-action 'self' " + legacyUrl.origin,
-      scriptSrc,
+      `script-src 'self' 'unsafe-inline'${isProduction ? "" : " 'unsafe-eval'"}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' data:",
       `connect-src 'self' ${trustedOrigins}`,
-      "upgrade-insecure-requests",
+      ...(isProduction ? ["upgrade-insecure-requests"] : []),
     ].join("; "),
   },
   { key: "X-Frame-Options", value: "DENY" },
@@ -33,10 +31,14 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=(self), payment=()",
   },
-  {
-    key: "Strict-Transport-Security",
-    value: "max-age=31536000; includeSubDomains",
-  },
+  ...(isProduction
+    ? [
+        {
+          key: "Strict-Transport-Security",
+          value: "max-age=31536000; includeSubDomains",
+        },
+      ]
+    : []),
 ];
 
 const nextConfig: NextConfig = {
@@ -81,3 +83,5 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+

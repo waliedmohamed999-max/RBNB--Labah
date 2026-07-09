@@ -36,25 +36,3 @@ export function legacyHref(pathOrUrl = "/") {
 
   return legacyUrl(pathOrUrl);
 }
-
-export function normalizeFrontendHref(pathOrUrl = "/") {
-  if (!pathOrUrl || pathOrUrl === "#") {
-    return "#";
-  }
-
-  try {
-    const legacy = new URL(legacyBaseUrl);
-    const current = new URL(premiumFrontendUrl);
-    const target = /^https?:\/\//i.test(pathOrUrl)
-      ? new URL(pathOrUrl)
-      : new URL(pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`, current.origin);
-
-    if (target.origin === legacy.origin || target.origin === current.origin) {
-      return `${target.pathname}${target.search}${target.hash}`;
-    }
-  } catch {
-    return pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`;
-  }
-
-  return pathOrUrl.startsWith("/") || /^https?:\/\//i.test(pathOrUrl) ? pathOrUrl : `/${pathOrUrl}`;
-}

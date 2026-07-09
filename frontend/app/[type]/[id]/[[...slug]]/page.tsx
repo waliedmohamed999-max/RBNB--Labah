@@ -13,6 +13,8 @@ import { WishlistButton } from "@/components/ui/wishlist-button";
 import {
   getProductDetails,
   getProductReviews,
+  getPublicMenus,
+  getPublicSystemSettings,
   getSessionUser,
   getWishlist,
   pathToBridgeType,
@@ -48,10 +50,13 @@ export default async function ListingDetailsPage({
   const currentUser = await getSessionUser(cookieHeader);
   const numericId = Number(id);
 
-  const [details, reviews, wishlist] = await Promise.all([
+  const [details, reviews, wishlist, publicSettings, primaryMenus, footerMenus] = await Promise.all([
     getProductDetails(numericId, type),
     getProductReviews(numericId, type),
     currentUser ? getWishlist(cookieHeader) : Promise.resolve([]),
+    getPublicSystemSettings(),
+    getPublicMenus("primary"),
+    getPublicMenus("footer"),
   ]);
 
   if (!details) {
@@ -82,7 +87,11 @@ export default async function ListingDetailsPage({
 
   return (
     <main className="min-h-screen bg-white text-[#222222]" dir="rtl">
-      <SiteNavbar currentUser={currentUser} />
+      <SiteNavbar
+        currentUser={currentUser}
+        settings={publicSettings}
+        menuItems={primaryMenus?.[0]?.items ?? []}
+      />
 
       <section className="px-4 pb-10 pt-28 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-[1280px]">
@@ -479,7 +488,7 @@ export default async function ListingDetailsPage({
         </div>
       </div>
 
-      <Footer />
+      <Footer settings={publicSettings} footerItems={footerMenus?.[0]?.items ?? []} />
     </main>
   );
 }

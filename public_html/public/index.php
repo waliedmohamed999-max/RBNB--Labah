@@ -8,6 +8,22 @@
 
 define('LARAVEL_START', microtime(true));
 
+if (in_array($_SERVER['REQUEST_METHOD'] ?? 'GET', ['GET', 'HEAD'], true)) {
+    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+    $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $isPageRequest = str_contains($accept, 'text/html') || $accept === '';
+    $isBackendRoute = preg_match('#^/(api|bridge)(/|$)#', $uri);
+
+    if ($isPageRequest && ! $isBackendRoute) {
+        $frontendUrl = rtrim(getenv('PREMIUM_FRONTEND_URL') ?: 'http://localhost:3002', '/');
+        $query = $_SERVER['QUERY_STRING'] ?? '';
+        $target = $frontendUrl . $uri . ($query !== '' ? '?' . $query : '');
+
+        header('Location: ' . $target, true, 302);
+        exit;
+    }
+}
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

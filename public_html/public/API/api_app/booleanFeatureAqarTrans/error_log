@@ -1,0 +1,8 @@
+[10-Jun-2021 14:51:41 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/booleanFeatureAqarTrans/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/booleanFeatureAqarTrans/getdata.php on line 9
+[10-Jun-2021 22:13:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/booleanFeatureAqarTrans/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/booleanFeatureAqarTrans/getdata.php on line 9

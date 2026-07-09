@@ -10,7 +10,7 @@ export default function LogoutPage() {
   useEffect(() => {
     let mounted = true;
 
-    secureFetch("/api/session/logout", { method: "POST", cache: "no-store" }).finally(() => {
+    secureFetch("/api/session/logout", { method: "POST" }).finally(() => {
       if (mounted) {
         router.replace("/auth/login");
         router.refresh();

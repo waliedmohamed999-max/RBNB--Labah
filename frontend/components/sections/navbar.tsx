@@ -1,14 +1,17 @@
 "use client";
 
+import { secureFetch } from "@/lib/client-security";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Bell, Globe, LogOut, Menu, UserCircle2, X } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { BridgeMenuItem, BridgeSessionUser, BridgeSystemSettings } from "@/lib/api";
 import { resolveBrand } from "@/lib/brand";
 import { navItems } from "@/lib/site-data";
-import { normalizeFrontendHref } from "@/lib/platform";
+import { displayText } from "@/lib/text";
 
 type NavbarProps = {
   currentUser?: BridgeSessionUser | null;
@@ -23,17 +26,20 @@ type NavigationItem = {
 };
 
 export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
+  const router = useRouter();
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
+  const [pendingLogout, setPendingLogout] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const siteBrand = resolveBrand(settings);
   const logoUrl = siteBrand.logoShortUrl || siteBrand.logoUrl;
+  const displayName = displayText(currentUser?.display_name, "لوحة التحكم");
   const databaseNavigationItems = menuItems
     .filter((item) => item.is_active !== 0 && Number(item.parent_id || 0) === 0 && item.name.trim().length > 0)
     .sort((a, b) => Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0))
     .map((item) => ({
       title: item.name.trim(),
-      href: normalizeFrontendHref(item.route_name || item.url || "#"),
+      href: item.route_name || item.url || "#",
       target: item.open_in_new_tab || item.target_blank ? "_blank" : undefined,
     }));
   const navigationItems: NavigationItem[] =
@@ -44,6 +50,17 @@ export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 24);
   });
+
+  async function handleLogout() {
+    try {
+      setPendingLogout(true);
+      await secureFetch("/api/session/logout", { method: "POST" });
+      router.push("/");
+      router.refresh();
+    } finally {
+      setPendingLogout(false);
+    }
+  }
 
   const actionClass =
     "rounded-lg border border-white/50 bg-white/90 p-3 text-slate-800 shadow-sm transition hover:bg-white";
@@ -60,8 +77,8 @@ export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
       }}
       className="fixed inset-x-0 top-0 z-50 border-b backdrop-blur-xl"
     >
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10 lg:py-4">
-        <div className="order-3 flex shrink-0 items-center gap-2">
+      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-10">
+        <div className="order-3 flex items-center gap-2">
           <Link href="/dashboard/notifications" className={actionClass} aria-label="الإشعارات">
             <Bell className="size-4" />
           </Link>
@@ -73,18 +90,19 @@ export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
             <>
               <Link
                 href="/dashboard"
-                className="hidden rounded-lg border border-white/50 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white sm:inline-flex"
+                className="hidden rounded-lg border border-white/50 bg-white/90 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-white xl:inline-flex"
               >
-                {currentUser.display_name}
+                {displayName}
               </Link>
-              <Link
-                href="/api/session/logout"
-                prefetch={false}
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={pendingLogout}
                 className={actionClass}
                 aria-label="تسجيل الخروج"
               >
                 <LogOut className="size-4" />
-              </Link>
+              </button>
             </>
           ) : (
             <Link href="/auth/login" className={actionClass} aria-label="تسجيل الدخول">
@@ -93,15 +111,15 @@ export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
           )}
         </div>
 
-        <nav className="order-2 hidden min-w-0 flex-1 items-center gap-5 overflow-x-auto px-1 py-2 scrollbar-hide lg:flex lg:flex-none lg:gap-6 lg:overflow-visible">
+        <nav className="order-2 hidden items-center gap-6 xl:flex">
           {navigationItems.map((item) => (
-            <Link key={`${item.title}-${item.href}`} href={item.href} target={item.target} className="shrink-0 text-sm font-semibold text-slate-800 transition hover:text-rose-600">
+            <Link key={`${item.title}-${item.href}`} href={item.href} target={item.target} className="text-sm font-semibold text-slate-800 transition hover:text-rose-600">
               {item.title}
             </Link>
           ))}
         </nav>
 
-        <div className="order-1 flex shrink-0 items-center gap-3">
+        <div className="order-1 flex items-center gap-3">
           <Link
             href="/"
             className="flex size-12 items-center justify-center rounded-lg bg-slate-950 text-lg font-semibold text-white shadow-lg shadow-slate-950/20"
@@ -125,7 +143,7 @@ export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
             <div className="text-xl font-semibold tracking-tight text-slate-950">{siteBrand.nameAr}</div>
           </div>
           <button
-            className={actionClass + " lg:hidden"}
+            className={actionClass + " xl:hidden"}
             aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"}
             type="button"
             onClick={() => setMenuOpen((value) => !value)}
@@ -136,7 +154,7 @@ export function Navbar({ currentUser, settings, menuItems = [] }: NavbarProps) {
       </div>
 
       {menuOpen ? (
-        <div className="border-t border-slate-200 bg-white px-4 py-4 shadow-lg lg:hidden">
+        <div className="border-t border-slate-200 bg-white px-4 py-4 shadow-lg xl:hidden">
           <nav className="mx-auto grid max-w-[1440px] gap-2">
             {navigationItems.map((item) => (
               <Link

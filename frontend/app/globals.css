@@ -1,5 +1,53 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/NotoKufiArabic-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/NotoKufiArabic-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cairo";
+  src: url("/fonts/NotoKufiArabic-Bold.ttf") format("truetype");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Labayh Arabic";
+  src: url("/fonts/NotoKufiArabic-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Labayh Arabic";
+  src: url("/fonts/NotoKufiArabic-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Labayh Arabic";
+  src: url("/fonts/NotoKufiArabic-Bold.ttf") format("truetype");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #f8f8f6;
   --foreground: #0f172a;
@@ -8,7 +56,7 @@
   --border: rgba(148, 163, 184, 0.22);
   --primary: #FF385C;
   --ink: #1a1f36;
-  --font-arabic: "Cairo", "Segoe UI", Tahoma, Arial, sans-serif;
+  --font-arabic: "Labayh Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
   --font-inter: "Segoe UI", Arial, sans-serif;
 }
 
@@ -18,12 +66,10 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
 }
 
 body {
   margin: 0;
-  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-arabic), var(--font-inter), sans-serif;
@@ -43,66 +89,29 @@ textarea {
   font: inherit;
 }
 
+input[type="date"] {
+  direction: ltr;
+  font-family: var(--font-inter);
+  text-align: left;
+}
+
 img {
   max-width: 100%;
 }
 
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.font-\[Cairo\] {
+  font-family: var(--font-arabic);
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-main,
-section,
-div {
-  min-width: 0;
-}
-
-@media (max-width: 767px) {
-  .dashboard-shell {
-    overflow-x: hidden;
-  }
-
-  .dashboard-shell .dashboard-content,
-  .dashboard-shell .dashboard-content > *,
-  .dashboard-shell section,
-  .dashboard-shell article,
-  .dashboard-shell aside,
-  .dashboard-shell form {
-    max-width: 100%;
-  }
-
-  .dashboard-shell h1,
-  .dashboard-shell h2,
-  .dashboard-shell h3,
-  .dashboard-shell p,
-  .dashboard-shell span,
-  .dashboard-shell a,
-  .dashboard-shell button {
-    overflow-wrap: anywhere;
-    white-space: normal;
-  }
-
-  .dashboard-shell table {
-    width: max-content;
-  }
-
-  .dashboard-shell pre,
-  .dashboard-shell code,
-  .dashboard-shell table,
-  .dashboard-shell table * {
-    white-space: revert;
-  }
-
-  .dashboard-shell .fixed.left-6 {
-    left: 1rem;
-    right: 1rem;
-    max-width: calc(100vw - 2rem);
-  }
+[class^="fa-"],
+[class*=" fa-"],
+[class^="mdi-"],
+[class*=" mdi-"],
+[class^="fe-"],
+[class*=" fe-"],
+[class^="ti-"],
+[class*=" ti-"] {
+  font-family: inherit;
 }
 
 ::selection {

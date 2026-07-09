@@ -1,19 +1,5 @@
-import { cache } from "react";
 import { legacyUrl } from "@/lib/platform";
 import { normalizeDeepText } from "@/lib/text";
-
-const VERCEL_ADMIN_COOKIE = "labayh_vercel_admin";
-const LOGIN_DISABLED_USER: BridgeSessionUser = {
-  id: 1,
-  email: "admin@labayh.local",
-  mobile: "",
-  first_name: "Admin",
-  last_name: "",
-  display_name: "Admin",
-  avatar: "",
-  roles: ["admin", "administrator"],
-  dashboard_url: "/dashboard",
-};
 
 export type BridgeListingType = "home" | "experience" | "service";
 
@@ -849,225 +835,8 @@ type FetchBridgeOptions = {
   method?: "GET" | "POST";
   body?: unknown;
   revalidate?: number | false;
+  timeoutMs?: number;
 };
-
-const FALLBACK_DASHBOARD_SUMMARY: BridgeDashboardSummary = {
-  role: "admin",
-  bookings_count: 0,
-  pending_count: 0,
-  completed_count: 0,
-  wishlist_count: 0,
-  gross_total: 0,
-  currency: "SAR",
-  quick_links: [],
-};
-
-const FALLBACK_PROFILE: BridgeProfile = {
-  id: LOGIN_DISABLED_USER.id,
-  email: LOGIN_DISABLED_USER.email,
-  mobile: LOGIN_DISABLED_USER.mobile,
-  first_name: LOGIN_DISABLED_USER.first_name,
-  last_name: LOGIN_DISABLED_USER.last_name,
-  display_name: LOGIN_DISABLED_USER.display_name,
-  location: "",
-  address: "",
-  description: "Preview admin profile until the Laravel API is connected.",
-  trade_name: "Labayh",
-  avatar: LOGIN_DISABLED_USER.avatar,
-  roles: LOGIN_DISABLED_USER.roles,
-  dashboard_url: LOGIN_DISABLED_USER.dashboard_url,
-};
-
-const FALLBACK_NOTIFICATIONS: BridgeNotificationsResponse = {
-  total: 3,
-  page: 1,
-  per_page: 20,
-  unread_count: 3,
-  results: [
-    {
-      id: 1,
-      type: "system",
-      title: "Backend connection is not configured yet",
-      time_ago: "now",
-      created_at: new Date().toISOString(),
-      icon: "bell",
-    },
-    {
-      id: 2,
-      type: "global",
-      title: "Configure NEXT_PUBLIC_LEGACY_BASE_URL to load live dashboard data",
-      time_ago: "now",
-      created_at: new Date().toISOString(),
-      icon: "shield",
-    },
-    {
-      id: 3,
-      type: "booking",
-      title: "Dashboard is running in preview mode",
-      time_ago: "now",
-      created_at: new Date().toISOString(),
-      icon: "calendar",
-    },
-  ],
-};
-
-const FALLBACK_SETTINGS: BridgeSystemSettings = {
-  site_title: "Labayh",
-  site_description: "Booking platform",
-  admin_email: "admin@labayh.local",
-  contact_phone: "",
-  contact_email: "admin@labayh.local",
-  contact_address: "",
-  dashboard_logo: "",
-  dashboard_logo_short: "",
-  site_language: "ar",
-  brand_name_ar: "لبية",
-  brand_name_en: "Labayh",
-  brand_logo_url: "",
-  brand_logo_short_url: "",
-  public_hero_eyebrow: "Labayh",
-  public_hero_title: "Booking management",
-  public_hero_subtitle: "Preview mode",
-  footer_tagline: "Labayh",
-  footer_description: "Preview mode until backend is connected.",
-  footer_sections_title: "Sections",
-  footer_account_title: "Account",
-  footer_newsletter_title: "Newsletter",
-  footer_newsletter_text: "Stay updated.",
-};
-
-const FALLBACK_MESSAGES_META: BridgeMessagesMeta = {
-  users: [
-    { id: 1, name: "Admin", mobile: "+966500000000", email: "admin@labayh.local" },
-    { id: 2, name: "Preview User", mobile: "+966511111111", email: "preview@labayh.local" },
-  ],
-};
-
-const FALLBACK_LANGUAGES: BridgeLanguagesResponse = {
-  total: 2,
-  page: 1,
-  per_page: 20,
-  catalog: {
-    ar: { name: "Arabic" },
-    en: { name: "English" },
-  },
-  results: [
-    {
-      id: 1,
-      code: "ar",
-      name: "Arabic",
-      flag_name: "Saudi Arabia",
-      flag_code: "sa",
-      status: "publish",
-      rtl: "on",
-      priority: 1,
-    },
-    {
-      id: 2,
-      code: "en",
-      name: "English",
-      flag_name: "United States",
-      flag_code: "us",
-      status: "publish",
-      rtl: "off",
-      priority: 2,
-    },
-  ],
-};
-
-const FALLBACK_TRANSLATION: BridgeTranslationResponse = {
-  langs: {
-    ar: { name: "Arabic" },
-    en: { name: "English" },
-  },
-  lang: "ar",
-  strings: ["dashboard.title", "dashboard.preview", "common.save", "common.cancel"],
-  translation: {
-    "dashboard.title": "Dashboard",
-    "dashboard.preview": "Preview mode",
-    "common.save": "Save",
-    "common.cancel": "Cancel",
-  },
-};
-
-const FALLBACK_SEO: BridgeSeoResponse = {
-  enabled: true,
-  pages: [
-    {
-      key: "home",
-      screen: "home",
-      name: "Home",
-      seo_title: JSON.stringify({ ar: "Labayh", en: "Labayh" }),
-      seo_description: JSON.stringify({ ar: "Booking platform", en: "Booking platform" }),
-      facebook_title: JSON.stringify({ ar: "Labayh", en: "Labayh" }),
-      facebook_description: JSON.stringify({ ar: "Booking platform", en: "Booking platform" }),
-      facebook_image: 0,
-      twitter_title: JSON.stringify({ ar: "Labayh", en: "Labayh" }),
-      twitter_description: JSON.stringify({ ar: "Booking platform", en: "Booking platform" }),
-      twitter_image: 0,
-    },
-    {
-      key: "dashboard",
-      screen: "dashboard",
-      name: "Dashboard",
-      seo_title: JSON.stringify({ ar: "Dashboard", en: "Dashboard" }),
-      seo_description: JSON.stringify({ ar: "Administration dashboard", en: "Administration dashboard" }),
-      facebook_title: JSON.stringify({ ar: "Dashboard", en: "Dashboard" }),
-      facebook_description: JSON.stringify({ ar: "Administration dashboard", en: "Administration dashboard" }),
-      facebook_image: 0,
-      twitter_title: JSON.stringify({ ar: "Dashboard", en: "Dashboard" }),
-      twitter_description: JSON.stringify({ ar: "Administration dashboard", en: "Administration dashboard" }),
-      twitter_image: 0,
-    },
-  ],
-};
-
-const FALLBACK_API_SETTINGS: BridgeApiSettings = {
-  access_token: "preview-token",
-  api_lifetime: "30",
-  api_lifetime_type: "day",
-};
-
-const FALLBACK_SYSTEM_TOOLS: BridgeSystemTools = {
-  password_required: false,
-  tools: [
-    { value: "clear_cache", label: "Clear cache" },
-    { value: "database_backup", label: "Database backup" },
-    { value: "test_email", label: "Test email" },
-  ],
-};
-
-function fallbackPostTerms(taxonomy: "post-category" | "post-tag"): BridgePostTermsResponse {
-  const isTag = taxonomy === "post-tag";
-  return {
-    taxonomy,
-    total: 2,
-    page: 1,
-    per_page: 20,
-    results: [
-      {
-        id: isTag ? 101 : 1,
-        title: isTag ? "Preview" : "General",
-        slug: isTag ? "preview" : "general",
-        description: "Fallback item until backend is connected.",
-        image: "",
-        icon: isTag ? "#" : "G",
-        price: 0,
-        taxonomy,
-      },
-      {
-        id: isTag ? 102 : 2,
-        title: isTag ? "News" : "Announcements",
-        slug: isTag ? "news" : "announcements",
-        description: "Sample dashboard data.",
-        image: "",
-        icon: isTag ? "N" : "A",
-        price: 0,
-        taxonomy,
-      },
-    ],
-  };
-}
 
 export type SearchInput = Record<string, string | number | string[] | undefined>;
 
@@ -1098,10 +867,22 @@ function toStringArray(value: string | string[] | undefined) {
     .filter(Boolean);
 }
 
+function createTimeoutSignal(timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  return {
+    signal: controller.signal,
+    cancel: () => clearTimeout(timeout),
+  };
+}
+
 async function fetchBridgePayload<T>(
   path: string,
   options: FetchBridgeOptions = {},
 ): Promise<BridgeResponse<T> | null> {
+  const timeout = createTimeoutSignal(options.timeoutMs);
+
   try {
     const headers: HeadersInit = {
       Accept: "application/json",
@@ -1118,6 +899,7 @@ async function fetchBridgePayload<T>(
     const response = await fetch(legacyUrl(`/bridge/v1/${path}`), {
       method: options.method ?? "GET",
       headers,
+      signal: timeout.signal,
       body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
       ...(options.revalidate === false
         ? { cache: "no-store" as const }
@@ -1131,6 +913,8 @@ async function fetchBridgePayload<T>(
     return normalizeDeepText((await response.json()) as BridgeResponse<T>);
   } catch {
     return null;
+  } finally {
+    timeout.cancel();
   }
 }
 
@@ -1138,6 +922,8 @@ async function fetchBridgeResult<T>(
   path: string,
   options: FetchBridgeOptions = {},
 ): Promise<BridgeResult<T>> {
+  const timeout = createTimeoutSignal(options.timeoutMs);
+
   try {
     const headers: HeadersInit = {
       Accept: "application/json",
@@ -1154,6 +940,7 @@ async function fetchBridgeResult<T>(
     const response = await fetch(legacyUrl(`/bridge/v1/${path}`), {
       method: options.method ?? "GET",
       headers,
+      signal: timeout.signal,
       body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
       ...(options.revalidate === false
         ? { cache: "no-store" as const }
@@ -1178,6 +965,8 @@ async function fetchBridgeResult<T>(
       data: null,
       message: error instanceof Error ? error.message : "Unknown bridge error",
     };
+  } finally {
+    timeout.cancel();
   }
 }
 
@@ -1213,37 +1002,16 @@ export function buildListingPath(item: Pick<BridgeListing, "id" | "slug" | "type
   return `/${bridgeTypeToPath(item.type)}/${item.id}/${item.slug}`;
 }
 
-export const getSessionUser = cache(async function getSessionUser(cookieHeader?: string) {
-  return LOGIN_DISABLED_USER;
-
-  const localSession = readLocalAdminSession(cookieHeader);
-  if (localSession) {
-    return localSession;
+export async function getSessionUser(cookieHeader?: string) {
+  if (!cookieHeader) {
+    return null;
   }
 
   return fetchBridge<BridgeSessionUser>("session", {
     cookieHeader,
     revalidate: false,
+    timeoutMs: 3000,
   });
-});
-
-function readLocalAdminSession(cookieHeader?: string): BridgeSessionUser | null {
-  const value = cookieHeader
-    ?.split(";")
-    .map((part) => part.trim())
-    .find((part) => part.startsWith(`${VERCEL_ADMIN_COOKIE}=`))
-    ?.slice(VERCEL_ADMIN_COOKIE.length + 1);
-
-  if (!value) {
-    return null;
-  }
-
-  try {
-    const session = JSON.parse(decodeURIComponent(value)) as BridgeSessionUser;
-    return Array.isArray(session.roles) && session.roles.length > 0 ? session : null;
-  } catch {
-    return null;
-  }
 }
 
 export async function getHomeProducts() {
@@ -1264,17 +1032,17 @@ export async function getWishlist(cookieHeader?: string, type?: string) {
 }
 
 export async function getProfile(cookieHeader?: string) {
-  return (await fetchBridge<BridgeProfile>("profile", {
+  return fetchBridge<BridgeProfile>("profile", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_PROFILE;
+  });
 }
 
 export async function getDashboardSummary(cookieHeader?: string) {
-  return (await fetchBridge<BridgeDashboardSummary>("dashboard/summary", {
+  return fetchBridge<BridgeDashboardSummary>("dashboard/summary", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_DASHBOARD_SUMMARY;
+  });
 }
 
 export async function getDashboardBookings(
@@ -1343,13 +1111,13 @@ export async function getNotifications(
     params.set("page", page);
   }
 
-  return (await fetchBridge<BridgeNotificationsResponse>(
+  return fetchBridge<BridgeNotificationsResponse>(
     `notifications${params.toString() ? `?${params.toString()}` : ""}`,
     {
       cookieHeader,
       revalidate: false,
     },
-  )) ?? FALLBACK_NOTIFICATIONS;
+  );
 }
 
 export async function searchProducts(type: string, input: SearchInput = {}) {
@@ -1424,6 +1192,7 @@ export async function getProductDetails(id: number, type: string) {
 
   return fetchBridge<BridgeListingDetails>(`products/${id}?type=${bridgeType}`, {
     revalidate: false,
+    timeoutMs: 15000,
   });
 }
 
@@ -1435,6 +1204,7 @@ export async function getProductReviews(id: number, type: string) {
 
   return fetchBridge<BridgeReview[]>(`products/${id}/reviews?type=${bridgeType}`, {
     revalidate: false,
+    timeoutMs: 5000,
   });
 }
 
@@ -1684,7 +1454,8 @@ export async function getLastMinuteHomes(cookieHeader?: string) {
     "dashboard/last-minute/homes",
     {
       cookieHeader,
-      revalidate: false,
+      revalidate: cookieHeader ? false : 60,
+      timeoutMs: 5000,
     },
   );
 }
@@ -1946,16 +1717,17 @@ export async function getPageEditor(id: number | "new", cookieHeader?: string) {
 }
 
 export async function getSystemSettings(cookieHeader?: string) {
-  return (await fetchBridge<BridgeSystemSettings>("dashboard/system-native/settings", {
+  return fetchBridge<BridgeSystemSettings>("dashboard/system-native/settings", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_SETTINGS;
+  });
 }
 
 export async function getPublicSystemSettings() {
-  return (await fetchBridge<BridgeSystemSettings>("public/settings", {
-    revalidate: false,
-  })) ?? FALLBACK_SETTINGS;
+  return fetchBridge<BridgeSystemSettings>("public/settings", {
+    revalidate: 300,
+    timeoutMs: 5000,
+  });
 }
 
 export async function getMenus(cookieHeader?: string) {
@@ -1967,15 +1739,16 @@ export async function getMenus(cookieHeader?: string) {
 
 export async function getPublicMenus(location = "primary") {
   return fetchBridge<BridgeMenu[]>(`public/menus?location=${encodeURIComponent(location)}`, {
-    revalidate: 0,
+    revalidate: 300,
+    timeoutMs: 5000,
   });
 }
 
 export async function getMessagesMeta(cookieHeader?: string) {
-  return (await fetchBridge<BridgeMessagesMeta>("dashboard/system-native/messages", {
+  return fetchBridge<BridgeMessagesMeta>("dashboard/system-native/messages", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_MESSAGES_META;
+  });
 }
 
 export async function getLanguages(
@@ -1990,41 +1763,39 @@ export async function getLanguages(
   if (search) params.set("_s", search);
   if (status) params.set("status", status);
 
-  return (await fetchBridge<BridgeLanguagesResponse>(
+  return fetchBridge<BridgeLanguagesResponse>(
     `dashboard/system-native/languages${params.toString() ? `?${params.toString()}` : ""}`,
     { cookieHeader, revalidate: false },
-  )) ?? FALLBACK_LANGUAGES;
+  );
 }
 
 export async function getTranslationData(lang: string, cookieHeader?: string) {
   const suffix = lang ? `?lang=${encodeURIComponent(lang)}` : "";
-  const payload = await fetchBridge<BridgeTranslationResponse>(`dashboard/system-native/translation${suffix}`, {
+  return fetchBridge<BridgeTranslationResponse>(`dashboard/system-native/translation${suffix}`, {
     cookieHeader,
     revalidate: false,
   });
-
-  return payload ?? { ...FALLBACK_TRANSLATION, lang: lang && lang !== "none" ? lang : FALLBACK_TRANSLATION.lang };
 }
 
 export async function getSeoData(cookieHeader?: string) {
-  return (await fetchBridge<BridgeSeoResponse>("dashboard/system-native/seo", {
+  return fetchBridge<BridgeSeoResponse>("dashboard/system-native/seo", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_SEO;
+  });
 }
 
 export async function getApiSettings(cookieHeader?: string) {
-  return (await fetchBridge<BridgeApiSettings>("dashboard/system-native/api", {
+  return fetchBridge<BridgeApiSettings>("dashboard/system-native/api", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_API_SETTINGS;
+  });
 }
 
 export async function getSystemTools(cookieHeader?: string) {
-  return (await fetchBridge<BridgeSystemTools>("dashboard/system-native/tools", {
+  return fetchBridge<BridgeSystemTools>("dashboard/system-native/tools", {
     cookieHeader,
     revalidate: false,
-  })) ?? FALLBACK_SYSTEM_TOOLS;
+  });
 }
 
 export async function getPostComments(
@@ -2056,10 +1827,10 @@ export async function getPostTerms(
   if (page) params.set("page", page);
   if (search) params.set("_s", search);
 
-  return (await fetchBridge<BridgePostTermsResponse>(
+  return fetchBridge<BridgePostTermsResponse>(
     `dashboard/content/posts/terms/${taxonomy}${params.toString() ? `?${params.toString()}` : ""}`,
     { cookieHeader, revalidate: false },
-  )) ?? fallbackPostTerms(taxonomy);
+  );
 }
 
 export async function loginWithSessionBridge(payload: {

@@ -91,7 +91,7 @@ const initialKeys: ApiKey[] = [
     permissions: ["قراءة", "كتابة"],
     lastUsed: "منذ 2 ساعة",
     active: true,
-    token: "",
+    token: "demo_live_web_9sK2mP4xT8nQ1zV7",
   },
   {
     id: "key_test_mobile",
@@ -101,7 +101,7 @@ const initialKeys: ApiKey[] = [
     permissions: ["قراءة"],
     lastUsed: "منذ 3 أيام",
     active: true,
-    token: "example_mobile_token",
+    token: "demo_test_mobile_5dL8vA1cR6pN2",
   },
 ];
 
@@ -128,7 +128,7 @@ const logs: ApiLog[] = [
     method: "GET",
     status: 200,
     duration: 128,
-    request: { headers: { authorization: "Bearer [redacted]" }, query: { page: 1 } },
+    request: { headers: { authorization: "Bearer demo_live_***" }, query: { page: 1 } },
     response: { status: 1, results: 24 },
   },
   {
@@ -158,7 +158,7 @@ const logs: ApiLog[] = [
     method: "DELETE",
     status: 403,
     duration: 96,
-    request: { headers: { authorization: "Bearer example_***" } },
+    request: { headers: { authorization: "Bearer demo_test_***" } },
     response: { status: 0, message: "Permission denied" },
   },
 ];
@@ -329,7 +329,7 @@ export function ApiSettingsManager({ payload }: { payload: BridgeApiSettings }) 
   const [createdAccepted, setCreatedAccepted] = useState(false);
   const [webhookUrl, setWebhookUrl] = useState("https://labayh.com/webhooks/labayh");
   const [webhookSecretVisible, setWebhookSecretVisible] = useState(false);
-  const [webhookSecret] = useState("");
+  const [webhookSecret] = useState("whsec_live_89sdf7a9sdf7");
   const [webhookStatus, setWebhookStatus] = useState<string | null>(null);
   const [logSearch, setLogSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -1021,3 +1021,4 @@ curl -X GET "https://api.labayh.com/v1/listings" \\
     </div>
   );
 }
+

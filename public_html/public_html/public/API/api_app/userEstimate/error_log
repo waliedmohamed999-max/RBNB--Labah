@@ -1,0 +1,56 @@
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 3
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 22
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 3
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 22
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 3
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 22
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 3
+[22-Jan-2022 20:27:38 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 16
+[22-Jan-2022 20:27:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 22
+[22-Jan-2022 20:28:17 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:28:17 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 3
+[22-Jan-2022 20:28:17 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 16
+[22-Jan-2022 20:28:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 22
+[22-Jan-2022 20:28:17 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:28:17 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 3
+[22-Jan-2022 20:28:17 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 16
+[22-Jan-2022 20:28:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 22
+[22-Jan-2022 20:28:18 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:28:18 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 3
+[22-Jan-2022 20:28:18 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 16
+[22-Jan-2022 20:28:18 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/sum_rates.php on line 22
+[22-Jan-2022 20:28:18 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:28:18 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 3
+[22-Jan-2022 20:28:18 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 16
+[22-Jan-2022 20:28:18 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php:22
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/userEstimate/select_estimates.php on line 22

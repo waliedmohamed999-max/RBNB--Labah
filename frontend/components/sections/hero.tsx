@@ -95,7 +95,7 @@ export function Hero({ settings, quickLinks = [] }: { settings?: BridgeSystemSet
 
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="relative min-h-[660px] lg:min-h-[720px]">
+      <div className="relative min-h-[720px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide.id}
@@ -114,8 +114,8 @@ export function Hero({ settings, quickLinks = [] }: { settings?: BridgeSystemSet
           </motion.div>
         </AnimatePresence>
 
-        <div className="relative mx-auto flex min-h-[660px] max-w-[1440px] flex-col justify-end px-4 pb-8 pt-28 sm:px-6 lg:min-h-[720px] lg:px-10 lg:pb-10 lg:pt-32">
-          <div className="max-w-4xl pb-6 text-white lg:pb-8">
+        <div className="relative mx-auto flex min-h-[720px] max-w-[1440px] flex-col justify-end px-4 pb-10 pt-32 sm:px-6 lg:px-10">
+          <div className="max-w-4xl pb-8 text-white">
             <span className="inline-flex rounded-md border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold backdrop-blur">
               {currentSlide.eyebrow}
             </span>
@@ -127,21 +127,21 @@ export function Hero({ settings, quickLinks = [] }: { settings?: BridgeSystemSet
                 exit={{ opacity: 0, y: -12 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
               >
-                <h1 className="mt-5 max-w-3xl text-3xl font-semibold leading-tight tracking-tight sm:text-5xl lg:mt-6 lg:text-6xl">
+                <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
                   {currentSlide.title}
                 </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-white/82 sm:text-lg lg:mt-5 lg:leading-8">
+                <p className="mt-5 max-w-2xl text-base leading-8 text-white/82 sm:text-lg">
                   {currentSlide.subtitle}
                 </p>
               </motion.div>
             </AnimatePresence>
-            <div className="mt-6 flex gap-3 overflow-x-auto pb-1 lg:mt-7 lg:flex-wrap lg:overflow-visible">
+            <div className="mt-7 flex flex-wrap gap-3">
               {heroSlides.map((slide, index) => (
                 <button
                   key={slide.id}
                   type="button"
                   onClick={() => setActiveSlide(index)}
-                  className={`shrink-0 rounded-lg border px-4 py-2 text-sm font-semibold transition ${
+                  className={`rounded-lg border px-4 py-2 text-sm font-semibold transition ${
                     index === activeSlide
                       ? "border-white bg-white text-slate-950"
                       : "border-white/25 bg-white/10 text-white hover:bg-white/18"
@@ -156,7 +156,7 @@ export function Hero({ settings, quickLinks = [] }: { settings?: BridgeSystemSet
           <div className="rounded-lg border border-white/40 bg-white p-3 shadow-[0_26px_80px_-38px_rgba(15,23,42,0.75)]">
             <form
               action="/home-search-result"
-              className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-[1.25fr_1fr_1fr_.75fr_.75fr_auto]"
+              className="grid gap-3 lg:grid-cols-[1.25fr_1fr_1fr_.75fr_.75fr_auto]"
             >
               <Field label="المدينة" icon={<MapPin className="size-4" />}>
                 <input
@@ -196,17 +196,17 @@ export function Hero({ settings, quickLinks = [] }: { settings?: BridgeSystemSet
 
               <button
                 type="submit"
-                className="col-span-2 inline-flex min-h-[64px] items-center justify-center gap-2 rounded-lg bg-rose-500 px-7 py-4 text-base font-semibold text-white shadow-[0_18px_38px_rgba(244,63,94,.28)] transition hover:bg-rose-600 md:col-span-3 lg:col-span-1 lg:min-h-[76px]"
+                className="inline-flex min-h-[76px] items-center justify-center gap-2 rounded-lg bg-rose-500 px-7 py-4 text-base font-semibold text-white shadow-[0_18px_38px_rgba(244,63,94,.28)] transition hover:bg-rose-600"
               >
                 <Search className="h-4 w-4" />
                 ابدأ البحث
               </button>
             </form>
-            <div className="flex gap-3 overflow-x-auto px-2 pb-1 pt-4 text-sm lg:flex-wrap lg:overflow-visible">
+            <div className="flex flex-wrap gap-3 px-2 pb-1 pt-4 text-sm">
               {heroQuickLinks.map((item) => (
                 <Link
                   key={`${item.title}-${item.href}`}
-                  className="shrink-0 text-slate-600 transition hover:text-rose-600"
+                  className="text-slate-600 transition hover:text-rose-600"
                   href={item.href}
                   target={item.target === "_blank" ? "_blank" : undefined}
                 >

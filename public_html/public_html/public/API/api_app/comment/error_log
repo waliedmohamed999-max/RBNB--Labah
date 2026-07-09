@@ -1,0 +1,12 @@
+[10-Jun-2021 14:36:55 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/comment/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/comment/getdata.php on line 9
+[11-Jun-2021 11:40:27 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/comment/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/comment/getdata.php on line 9
+[12-Jun-2021 11:02:56 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/comment/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/comment/getdata.php on line 9

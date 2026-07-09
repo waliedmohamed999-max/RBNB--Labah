@@ -30,6 +30,7 @@ export function DealCountdown({ endsAtTimestamp }: DealCountdownProps) {
   useEffect(() => {
     const end = Number(endsAtTimestamp ?? 0) * 1000;
     if (!end) {
+      setRemaining(0);
       return;
     }
 

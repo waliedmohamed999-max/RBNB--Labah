@@ -47,7 +47,7 @@ const defaultStore: Store = {
       active: true,
       createdAt: "2026-03-15T09:00:00.000Z",
       lastUsed: "منذ 2 ساعة",
-      tokenPreview: "[redacted]",
+      tokenPreview: "demo_live_••••••••••••9sK2",
     },
   ],
   integrations: [],
@@ -95,3 +95,4 @@ export function createToken(environment: "live" | "test" = "test") {
 export function previewToken(token: string) {
   return `${token.slice(0, 8)}••••••••••••${token.slice(-4)}`;
 }
+

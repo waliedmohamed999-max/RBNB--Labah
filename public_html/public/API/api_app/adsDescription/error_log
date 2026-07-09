@@ -1,0 +1,4 @@
+[11-Jun-2021 17:57:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/adsDescription/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/adsDescription/getdata.php on line 9

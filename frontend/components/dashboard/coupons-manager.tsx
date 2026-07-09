@@ -49,19 +49,8 @@ function formatDiscount(item: Pick<BridgeDashboardCoupon, "price" | "price_type"
   return `${Number(item.price).toLocaleString("ar-SA")} ${SAUDI_RIYAL_SYMBOL}`;
 }
 
-function normalizeCouponStatus(status?: string) {
-  const normalized = String(status || "").trim().toLowerCase();
-  return ["on", "active", "enabled", "1", "true", "نشط"].includes(normalized) ? "on" : "off";
-}
-
 function statusLabel(status: string) {
-  return normalizeCouponStatus(status) === "on" ? "نشط" : "غير نشط";
-}
-
-function statusClass(status: string) {
-  return normalizeCouponStatus(status) === "on"
-    ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100"
-    : "bg-gray-100 text-gray-600 ring-1 ring-gray-200";
+  return status === "on" ? "نشط" : "غير نشط";
 }
 
 function serviceLabel(type?: string) {
@@ -73,7 +62,7 @@ function serviceLabel(type?: string) {
 
 function isCurrent(item: BridgeDashboardCoupon) {
   const today = new Date().toISOString().slice(0, 10);
-  if (normalizeCouponStatus(item.status) !== "on") return false;
+  if (item.status !== "on") return false;
   if (item.start_date && today < item.start_date) return false;
   if (item.end_date && today > item.end_date) return false;
   return true;
@@ -92,12 +81,12 @@ export function CouponsManager({ payload }: { payload: BridgeDashboardCouponsRes
     const needle = query.trim().toLowerCase();
     return items.filter((item) => {
       const matchesText = !needle || [item.code, item.description, item.service_type].filter(Boolean).some((value) => String(value).toLowerCase().includes(needle));
-      const matchesStatus = !statusFilter || normalizeCouponStatus(item.status) === statusFilter;
+      const matchesStatus = !statusFilter || item.status === statusFilter;
       return matchesText && matchesStatus;
     });
   }, [items, query, statusFilter]);
 
-  const activeCount = items.filter((item) => normalizeCouponStatus(item.status) === "on").length;
+  const activeCount = items.filter((item) => item.status === "on").length;
   const currentCount = items.filter(isCurrent).length;
 
   function updateDraft(next: Partial<CouponDraft>) {
@@ -233,19 +222,17 @@ export function CouponsManager({ payload }: { payload: BridgeDashboardCouponsRes
           <div className="grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
             {filteredItems.map((item) => (
               <article key={item.id} className={`rounded-[24px] border bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md ${isCurrent(item) ? "border-emerald-200" : "border-gray-100"}`}>
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-3">
                     <div className="grid size-12 place-items-center rounded-2xl bg-[#FF385C]/10 text-[#FF385C]">
                       <TicketPercent className="size-5" />
                     </div>
-                    <div className="min-w-0">
-                      <h2 className="truncate text-xl font-black tracking-wide text-[#1a1f36]" dir="ltr" title={item.code}>{item.code}</h2>
+                    <div>
+                      <h2 className="text-xl font-black tracking-wide text-[#1a1f36]" dir="ltr">{item.code}</h2>
                       <p className="mt-1 text-xs font-bold text-gray-400">#{item.id}</p>
                     </div>
                   </div>
-                  <span className={`inline-flex h-7 shrink-0 items-center justify-center whitespace-nowrap rounded-full px-3 text-xs font-bold leading-none ${statusClass(item.status)}`}>
-                    {statusLabel(item.status)}
-                  </span>
+                  <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${item.status === "on" ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-500"}`}>{statusLabel(item.status)}</span>
                 </div>
                 <div className="mt-5 rounded-2xl bg-[#1a1f36] p-5 text-white">
                   <p className="text-xs font-bold text-white/55">قيمة الخصم</p>
@@ -266,8 +253,8 @@ export function CouponsManager({ payload }: { payload: BridgeDashboardCouponsRes
                     <Edit3 className="size-4" />
                     تعديل
                   </button>
-                  <button type="button" disabled={pending} onClick={() => updateStatus(item.id, normalizeCouponStatus(item.status) === "on" ? "off" : "on")} className="rounded-xl border border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 disabled:opacity-60">
-                    {normalizeCouponStatus(item.status) === "on" ? "تعطيل" : "تفعيل"}
+                  <button type="button" disabled={pending} onClick={() => updateStatus(item.id, item.status === "on" ? "off" : "on")} className="rounded-xl border border-gray-200 px-3 py-2 text-sm font-bold text-gray-700 disabled:opacity-60">
+                    {item.status === "on" ? "تعطيل" : "تفعيل"}
                   </button>
                   <button type="button" disabled={pending} onClick={() => deleteCoupon(item.id)} className="rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-red-600 disabled:opacity-60">
                     <Trash2 className="size-4" />

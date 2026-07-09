@@ -23,7 +23,7 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { createElement, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import type { BridgeNotification, BridgeNotificationsResponse } from "@/lib/api";
 
 type AlertFilter = "all" | "booking" | "global" | "system";
@@ -351,7 +351,7 @@ function StatCard({ icon: Icon, label, value, hint, tone = "primary" }: { icon: 
 }
 
 function AlertRow({ item, checked, deleting, onCheck, onOpen, onDelete }: { item: BridgeNotification; checked: boolean; deleting: boolean; onCheck: () => void; onOpen: () => void; onDelete: () => void }) {
-  const icon = iconFor(item.icon || item.type);
+  const Icon = iconFor(item.icon || item.type);
   const priority = priorityFor(item);
 
   return (
@@ -359,7 +359,7 @@ function AlertRow({ item, checked, deleting, onCheck, onOpen, onDelete }: { item
       <div className="flex items-center gap-4">
         <input type="checkbox" checked={checked} onChange={onCheck} className="size-4 accent-[#FF385C]" />
         <button type="button" onClick={onOpen} className="grid size-12 place-items-center rounded-2xl bg-slate-100 text-slate-700">
-          {createElement(icon, { className: "size-5" })}
+          <Icon className="size-5" />
         </button>
       </div>
       <button type="button" onClick={onOpen} className="min-w-0 text-right">
@@ -432,7 +432,7 @@ function Suggestion({ text, href }: { text: string; href: string }) {
 }
 
 function AlertDrawer({ item, onClose, onDelete }: { item: BridgeNotification; onClose: () => void; onDelete: () => void }) {
-  const icon = iconFor(item.icon || item.type);
+  const Icon = iconFor(item.icon || item.type);
   const priority = priorityFor(item);
 
   return (
@@ -441,7 +441,7 @@ function AlertDrawer({ item, onClose, onDelete }: { item: BridgeNotification; on
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="grid size-12 place-items-center rounded-2xl bg-[#1a1f36] text-white">
-              {createElement(icon, { className: "size-5" })}
+              <Icon className="size-5" />
             </span>
             <div>
               <p className="text-xs font-bold text-slate-400">تفاصيل التنبيه</p>

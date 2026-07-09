@@ -14,7 +14,7 @@ import {
   Save,
   Trash2,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 function createEmptyItem(): BridgeMenuItem {
   return {
@@ -65,6 +65,15 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<"save" | "delete" | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (selectedId === "new") {
+      setDraft(emptyMenu());
+      return;
+    }
+    const selectedMenu = menus.find((item) => item.id === selectedId);
+    if (selectedMenu) setDraft(selectedMenu);
+  }, [menus, selectedId]);
 
   const totalItems = useMemo(() => menus.reduce((sum, menu) => sum + menu.items.length, 0), [menus]);
   const externalItems = useMemo(
@@ -121,21 +130,15 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
         return exists ? current.map((item) => (item.id === savedId ? savedMenu : item)) : [...current, savedMenu];
       });
       setSelectedId(savedId);
-      setDraft(savedMenu);
       setMessage(successMessage || result.message || "تم حفظ القائمة.");
     } finally {
       setBusy(null);
     }
   }
 
-  function selectMenu(id: number | "new") {
-    setSelectedId(id);
-    setDraft(id === "new" ? emptyMenu() : (menus.find((item) => item.id === id) ?? emptyMenu()));
-  }
-
   async function deleteMenu() {
     if (!draft.id) {
-      selectMenu("new");
+      setSelectedId("new");
       return;
     }
     if (!window.confirm(`هل تريد حذف قائمة ${draft.title}؟`)) return;
@@ -155,7 +158,7 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
       }
 
       setMenus((current) => current.filter((item) => item.id !== draft.id));
-      selectMenu("new");
+      setSelectedId("new");
       setMessage(result.message || "تم حذف القائمة.");
     } finally {
       setBusy(null);
@@ -178,15 +181,14 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
   }
 
   function cloneMenu() {
-    const clonedMenu = {
+    setDraft({
       ...draft,
       id: 0,
       title: `${draft.title || "قائمة"} نسخة`,
       key: "",
       position: "",
       items: draft.items.map((item, index) => ({ ...item, item_id: Date.now() + index })),
-    };
-    setDraft(clonedMenu);
+    });
     setSelectedId("new");
     setMessage("تم إنشاء نسخة قابلة للحفظ كقائمة جديدة.");
   }
@@ -230,7 +232,7 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
           </div>
           <button
             type="button"
-            onClick={() => selectMenu("new")}
+            onClick={() => setSelectedId("new")}
             className="inline-flex items-center gap-2 rounded-2xl bg-[#FF385C] px-5 py-3 text-sm font-bold text-white transition hover:bg-[#e63252]"
           >
             <Plus className="h-4 w-4" />
@@ -255,7 +257,7 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
             </div>
             <button
               type="button"
-              onClick={() => selectMenu("new")}
+              onClick={() => setSelectedId("new")}
               className="rounded-xl bg-[#1a1f36] px-4 py-2 text-sm font-bold text-white"
             >
               جديد
@@ -267,7 +269,7 @@ export function MenuManager({ initialMenus }: { initialMenus: BridgeMenu[] }) {
               <button
                 key={menu.id}
                 type="button"
-                onClick={() => selectMenu(menu.id)}
+                onClick={() => setSelectedId(menu.id)}
                 className={classNames(
                   "w-full rounded-2xl border p-4 text-right transition",
                   selectedId === menu.id

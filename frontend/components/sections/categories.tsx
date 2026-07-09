@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { BedDouble, Building2, Compass, Landmark, Mountain, Palmtree, type LucideIcon } from "lucide-react";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -37,10 +38,12 @@ function normalizeCategories(menuItems: BridgeMenuItem[]) {
     .map((item, index) => {
       const iconName = typeof item.metadata?.icon === "string" ? item.metadata.icon : "";
       const imageIndex = typeof item.metadata?.image_index === "number" ? item.metadata.image_index : index;
+      // إذا لم تكن الأيقونة معرفة بشكل صحيح استخدم BedDouble كأيقونة افتراضية
+      const icon = iconMap[iconName] || fallbackCategories[index % fallbackCategories.length]?.icon || BedDouble;
       return {
         title: item.name.trim(),
         href: item.route_name || item.url || "#",
-        icon: iconMap[iconName] ?? fallbackCategories[index % fallbackCategories.length]?.icon ?? BedDouble,
+        icon,
         imageIndex,
       };
     });
@@ -61,21 +64,18 @@ export function CategoriesSection({ menuItems = [] }: { menuItems?: BridgeMenuIt
         />
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map(({ title, icon: Icon, href, imageIndex }) => {
-            const imageUrl = categoryImages[imageIndex % categoryImages.length];
-
-            return (
+          {categories.map(({ title, icon: Icon, href, imageIndex }) => (
             <Link
               key={`${title}-${href}`}
               href={href}
               className="group relative min-h-[260px] overflow-hidden rounded-lg border border-slate-200 bg-slate-950 shadow-[0_24px_70px_-45px_rgba(15,23,42,0.55)] transition hover:-translate-y-1 hover:border-rose-200"
             >
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 bg-cover bg-center transition duration-500 group-hover:scale-105"
-                style={{
-                  backgroundImage: `linear-gradient(135deg, rgba(15, 23, 42, 0.2), rgba(244, 63, 94, 0.18)), url("${imageUrl}")`,
-                }}
+              <Image
+                src={categoryImages[imageIndex % categoryImages.length]}
+                alt={title}
+                fill
+                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                className="object-cover transition duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/56 to-slate-950/8" />
               <div className="absolute inset-x-0 bottom-0 p-6">
@@ -91,8 +91,7 @@ export function CategoriesSection({ menuItems = [] }: { menuItems?: BridgeMenuIt
                 </div>
               </div>
             </Link>
-            );
-          })}
+          ))}
         </div>
       </div>
     </section>

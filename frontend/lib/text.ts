@@ -1,4 +1,5 @@
 const MOJIBAKE_MARKERS = /[\u00c2\u00c3\u00d8\u00d9\u0152\u0160\u0178\u201a\u201e\u2020\u02c6]/;
+const ICON_FONT_PRIVATE_USE = /[\ue000-\uf8ff]/g;
 
 function charToByte(char: string): number[] {
   const code = char.charCodeAt(0);
@@ -45,15 +46,20 @@ function decodeUtf8(bytes: number[]) {
 }
 
 export function normalizeText(value: string) {
-  if (!MOJIBAKE_MARKERS.test(value)) {
-    return value;
+  const withoutIconGlyphs = value
+    .replace(ICON_FONT_PRIVATE_USE, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
+  if (!MOJIBAKE_MARKERS.test(withoutIconGlyphs)) {
+    return withoutIconGlyphs;
   }
 
   const bytes: number[] = [];
-  for (const char of value) {
+  for (const char of withoutIconGlyphs) {
     const next = charToByte(char);
     if (!next.length) {
-      return value;
+      return withoutIconGlyphs;
     }
     bytes.push(...next);
   }
@@ -61,8 +67,17 @@ export function normalizeText(value: string) {
   try {
     return decodeUtf8(bytes);
   } catch {
-    return value;
+    return withoutIconGlyphs;
   }
+}
+
+export function displayText(value: unknown, fallback: string) {
+  if (typeof value !== "string") {
+    return fallback;
+  }
+
+  const normalized = normalizeText(value);
+  return normalized ? normalized : fallback;
 }
 
 export function normalizeDeepText<T>(value: T): T {

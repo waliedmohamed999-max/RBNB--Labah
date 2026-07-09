@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { createElement, useMemo, useState, useTransition, type ReactNode } from "react";
+import { useMemo, useState, useTransition, type ReactNode } from "react";
 import {
   AlertTriangle,
   Bell,
@@ -465,7 +465,7 @@ function NotificationRow({
   onOpen: () => void;
   onDelete: () => void;
 }) {
-  const icon = iconFor(item.icon || item.type);
+  const Icon = iconFor(item.icon || item.type);
   const priority = priorityFor(item);
   const type = normalizedType(item);
 
@@ -474,7 +474,7 @@ function NotificationRow({
       <div className="flex items-center gap-4">
         <input type="checkbox" checked={checked} onChange={onCheck} className="size-4 rounded border-gray-300 text-[#FF385C] focus:ring-[#FF385C]" />
         <button type="button" onClick={onOpen} className={`grid size-12 place-items-center rounded-2xl ${unread ? "bg-[#FF385C]/10 text-[#FF385C]" : "bg-gray-100 text-gray-600"}`}>
-          {createElement(icon, { className: "size-5" })}
+          <Icon className="size-5" />
         </button>
       </div>
       <button type="button" onClick={onOpen} className="min-w-0 text-right">
@@ -565,7 +565,7 @@ function NotificationDrawer({
   onDelete: () => void;
   onCopy: () => void;
 }) {
-  const icon = iconFor(item.icon || item.type);
+  const Icon = iconFor(item.icon || item.type);
   const priority = priorityFor(item);
   const type = normalizedType(item);
   const timeline: Array<[string, string, LucideIcon]> = [
@@ -594,7 +594,7 @@ function NotificationDrawer({
           <div className="rounded-3xl border border-gray-100 bg-gray-50 p-5">
             <div className="flex items-start gap-4">
               <div className="grid size-14 shrink-0 place-items-center rounded-2xl bg-[#FF385C]/10 text-[#FF385C]">
-                {createElement(icon, { className: "size-7" })}
+                <Icon className="size-7" />
               </div>
               <div>
                 <h3 className="text-xl font-black text-[#1a1f36]">{titleOf(item)}</h3>

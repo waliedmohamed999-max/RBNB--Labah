@@ -1,0 +1,8 @@
+[02-Feb-2022 16:01:38 UTC] PHP Fatal error:  Uncaught Error: Object of class stdClass could not be converted to string in /home/blagatn/public_html/public/API/request.php:75
+Stack trace:
+#0 {main}
+  thrown in /home/blagatn/public_html/public/API/request.php on line 75
+[02-Feb-2022 16:01:41 UTC] PHP Fatal error:  Uncaught Error: Object of class stdClass could not be converted to string in /home/blagatn/public_html/public/API/request.php:75
+Stack trace:
+#0 {main}
+  thrown in /home/blagatn/public_html/public/API/request.php on line 75

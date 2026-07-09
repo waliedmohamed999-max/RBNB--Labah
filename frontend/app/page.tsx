@@ -17,6 +17,7 @@ import {
   getSessionUser,
   getWishlist,
 } from "@/lib/api";
+import { listPublicAds } from "@/lib/partner-ads-store";
 
 export default async function Home() {
   const headerStore = await headers();
@@ -33,6 +34,9 @@ export default async function Home() {
     categoryMenus,
     appPromoMenus,
     platformFeatureMenus,
+    primaryMenus,
+    footerMenus,
+    partnerAds,
   ] = await Promise.all([
     getHomeProducts(),
     getFeaturedPromotions(),
@@ -43,12 +47,19 @@ export default async function Home() {
     getPublicMenus("home-categories"),
     getPublicMenus("app-promo-links"),
     getPublicMenus("platform-features"),
+    getPublicMenus("primary"),
+    getPublicMenus("footer"),
+    listPublicAds(),
   ]);
   const savedIds = (wishlist ?? []).map((item) => item.id);
 
   return (
     <main className="min-h-screen bg-[#f8f8f6] text-slate-950">
-      <SiteNavbar currentUser={currentUser} />
+      <SiteNavbar
+        currentUser={currentUser}
+        settings={publicSettings}
+        menuItems={primaryMenus?.[0]?.items ?? []}
+      />
       <Hero settings={publicSettings} quickLinks={heroQuickMenus?.[0]?.items ?? []} />
       <CategoriesSection menuItems={categoryMenus?.[0]?.items ?? []} />
       <DestinationsSection
@@ -60,11 +71,12 @@ export default async function Home() {
         items={featuredPromotions}
         savedIds={savedIds}
         isAuthenticated={Boolean(currentUser)}
+        partnerAds={partnerAds}
       />
       <UrgentDealsSection items={featuredPromotions} lastMinuteHomes={lastMinuteHomes} />
       <AppPromoSection ctaItems={appPromoMenus?.[0]?.items ?? []} />
       <PlatformFeaturesSection menuItems={platformFeatureMenus?.[0]?.items ?? []} />
-      <Footer />
+      <Footer settings={publicSettings} footerItems={footerMenus?.[0]?.items ?? []} />
     </main>
   );
 }

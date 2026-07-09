@@ -1,0 +1,12 @@
+[10-Jun-2021 14:47:47 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/bankTransfer/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/bankTransfer/getdata.php on line 9
+[11-Jun-2021 11:56:43 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/bankTransfer/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/bankTransfer/getdata.php on line 9
+[11-Jun-2021 23:08:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/bankTransfer/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/bankTransfer/getdata.php on line 9

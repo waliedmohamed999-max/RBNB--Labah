@@ -9,6 +9,15 @@ type FeaturedListingsSectionProps = {
   items?: BridgeListing[] | null;
   savedIds?: number[];
   isAuthenticated?: boolean;
+  partnerAds?: Array<{
+    id: string;
+    title: string;
+    description: string;
+    partnerName: string;
+    partnerSlug: string;
+    serviceType: string;
+    city: string;
+  }>;
 };
 
 function formatFallbackPrice(value: string | number) {
@@ -20,6 +29,7 @@ export function FeaturedListingsSection({
   items,
   savedIds = [],
   isAuthenticated = false,
+  partnerAds = [],
 }: FeaturedListingsSectionProps) {
   const listings =
     items && items.length > 0
@@ -49,7 +59,7 @@ export function FeaturedListingsSection({
             description="نعرض الإقامات والتجارب المميزة مباشرة من لوحة التحكم، مع إبراز السعر والموقع والتقييم وحالة العرض بوضوح."
           />
           <Link
-            href="/home-search-result?featured=1"
+            href="/ads"
             className="w-fit rounded-lg border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-800 shadow-sm transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600"
           >
             عرض كل الإعلانات
@@ -65,6 +75,23 @@ export function FeaturedListingsSection({
             />
           ))}
         </div>
+
+        {partnerAds.length > 0 ? (
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {partnerAds.slice(0, 3).map((ad) => (
+              <Link
+                key={ad.id}
+                href={`/partners/${ad.partnerSlug}/ads`}
+                className="rounded-lg border border-rose-100 bg-white p-5 shadow-sm transition hover:border-rose-200 hover:bg-rose-50"
+              >
+                <span className="rounded-full bg-rose-50 px-3 py-1 text-xs font-black text-[#FF385C]">{ad.serviceType}</span>
+                <h3 className="mt-4 line-clamp-1 text-lg font-black text-slate-950">{ad.title}</h3>
+                <p className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-slate-500">{ad.description}</p>
+                <div className="mt-4 text-xs font-black text-slate-400">{ad.partnerName} · {ad.city}</div>
+              </Link>
+            ))}
+          </div>
+        ) : null}
       </div>
     </section>
   );

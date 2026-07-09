@@ -1,13 +1,12 @@
 import { headers } from "next/headers";
 import { WishlistSuite } from "@/components/dashboard/wishlist-suite";
-import { type BridgeSessionUser, getSessionUser, getWishlist } from "@/lib/api";
-import { DASHBOARD_SESSION_HEADER, decodeSessionHeader } from "@/lib/session-header";
+import { getSessionUser, getWishlist } from "@/lib/api";
 
 export default async function DashboardWishlistPage() {
   const headerStore = await headers();
   const cookieHeader = headerStore.get("cookie") ?? "";
   const [currentUser, wishlist] = await Promise.all([
-    decodeSessionHeader<BridgeSessionUser>(headerStore.get(DASHBOARD_SESSION_HEADER)) ?? getSessionUser(cookieHeader),
+    getSessionUser(cookieHeader),
     getWishlist(cookieHeader),
   ]);
 

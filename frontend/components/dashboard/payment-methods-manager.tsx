@@ -1027,13 +1027,11 @@ function RefundModal({ refund, onClose, onConfirm }: { refund: RefundRequest; on
 }
 
 function PayoutModal({ payout, onClose, onConfirm }: { payout: PartnerPayout; onClose: () => void; onConfirm: () => void }) {
-  const [transferReference] = useState(() => `PAY-${Date.now()}`);
-
   return (
     <Modal title="تحويل للشريك" onClose={onClose}>
       <InfoGrid items={[["الشريك", payout.partner], ["الحسابات", String(payout.listings)], ["إجمالي الإيرادات", money(payout.totalRevenue)], ["المستحق", money(payout.due)]]} />
       <Input label="المبلغ المراد تحويله" value={String(payout.due)} onChange={() => undefined} ltr />
-      <Input label="مرجع التحويل" value={transferReference} onChange={() => undefined} ltr />
+      <Input label="مرجع التحويل" value={`PAY-${Date.now()}`} onChange={() => undefined} ltr />
       <Textarea label="ملاحظة التحويل" value="تحويل مستحقات الشريك من لوحة الدفع." onChange={() => undefined} />
       <button type="button" onClick={onConfirm} className="rounded-xl bg-[#FF385C] px-4 py-3 text-sm font-bold text-white">تأكيد التحويل</button>
     </Modal>

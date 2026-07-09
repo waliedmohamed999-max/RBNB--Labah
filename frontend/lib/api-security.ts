@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { legacyUrl } from "@/lib/platform";
 import { CSRF_COOKIE_NAME } from "@/lib/security-constants";
+import { normalizeDeepText } from "@/lib/text";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const MAX_JSON_BODY_BYTES = 128 * 1024;
+export const MAX_PROXY_BODY_BYTES = 512 * 1024;
 
 type RateLimitBucket = {
   count: number;
@@ -75,9 +77,16 @@ export async function readJsonBody<T extends Record<string, unknown>>(
   }
 }
 
-export async function requireDashboardSession(request: NextRequest) {
-  return null;
+export function assertBodySize(request: NextRequest, maxBytes = MAX_PROXY_BODY_BYTES) {
+  const length = Number(request.headers.get("content-length") ?? 0);
+  if (Number.isFinite(length) && length > maxBytes) {
+    return jsonError("Request body is too large.", 413);
+  }
 
+  return null;
+}
+
+export async function requireDashboardSession(request: NextRequest) {
   try {
     const response = await fetch(legacyUrl("/bridge/v1/session"), {
       method: "GET",
@@ -96,46 +105,10 @@ export async function requireDashboardSession(request: NextRequest) {
       status?: number;
       data?: { roles?: unknown };
     };
-    const roles = Array.isArray(payload.data?.roles) ? (payload.data?.roles as unknown[]) : [];
+    const roles = Array.isArray(payload.data?.roles) ? payload.data.roles : [];
 
     if (!payload.status || roles.length === 0) {
       return jsonError("Authentication required.", 401);
-    }
-
-    return null;
-  } catch {
-    return jsonError("Authentication required.", 401);
-  }
-}
-
-export async function requireAdminSession(request: NextRequest) {
-  return null;
-
-  try {
-    const response = await fetch(legacyUrl("/bridge/v1/session"), {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-        Cookie: request.headers.get("cookie") ?? "",
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      return jsonError("Authentication required.", 401);
-    }
-
-    const payload = (await response.json()) as {
-      status?: number;
-      data?: { roles?: unknown };
-    };
-    const roles = Array.isArray(payload.data?.roles)
-      ? (payload.data?.roles as unknown[]).map((role) => String(role).toLowerCase())
-      : [];
-    const allowed = roles.some((role) => ["administrator", "admin", "superadmin"].includes(role));
-
-    if (!payload.status || !allowed) {
-      return jsonError("Admin permissions required.", 403);
     }
 
     return null;
@@ -188,6 +161,9 @@ export async function proxyBridgeResponse(
   const csrfError = assertCsrf(request);
   if (csrfError) return csrfError;
 
+  const bodySizeError = assertBodySize(request);
+  if (bodySizeError) return bodySizeError;
+
   const upstream = await fetch(legacyUrl(`/bridge/v1/${path.replace(/^\/+/, "")}`), {
     method: "POST",
     headers: {
@@ -199,11 +175,13 @@ export async function proxyBridgeResponse(
     cache: "no-store",
   });
 
+  const contentType = upstream.headers.get("content-type") ?? "application/json";
   const text = await upstream.text();
-  const response = new NextResponse(text, {
+  const body = contentType.includes("application/json") ? normalizeJsonText(text) : text;
+  const response = new NextResponse(body, {
     status: upstream.status,
     headers: {
-      "content-type": upstream.headers.get("content-type") ?? "application/json",
+      "content-type": contentType,
     },
   });
 
@@ -233,4 +211,12 @@ function hardenSetCookie(cookie: string) {
   }
 
   return parts.join("; ");
+}
+
+function normalizeJsonText(text: string) {
+  try {
+    return JSON.stringify(normalizeDeepText(JSON.parse(text)));
+  } catch {
+    return text;
+  }
 }

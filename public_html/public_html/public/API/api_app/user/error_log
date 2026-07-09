@@ -1,0 +1,11 @@
+[10-Jun-2021 14:41:52 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/user/getdata.php:9
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/user/getdata.php on line 9
+[22-Jan-2022 20:27:29 UTC] PHP Warning:  mysqli::__construct(): (HY000/1045): Access denied for user 'blagatn_2030_app'@'localhost' (using password: YES) in /home/blagat/public_html/public/API/include/config.php on line 16
+[22-Jan-2022 20:27:29 UTC] PHP Warning:  mysqli_query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/user/get_ads_per.php on line 3
+[22-Jan-2022 20:27:29 UTC] PHP Warning:  mysqli::query(): Couldn't fetch mysqli in /home/blagat/public_html/public/API/api_app/user/get_ads_per.php on line 13
+[22-Jan-2022 20:27:29 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/blagat/public_html/public/API/api_app/user/get_ads_per.php:18
+Stack trace:
+#0 {main}
+  thrown in /home/blagat/public_html/public/API/api_app/user/get_ads_per.php on line 18

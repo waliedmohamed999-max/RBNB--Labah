@@ -1,0 +1,32 @@
+[10-Jun-2021 00:55:53 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/advanced_search.php:68
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/advanced_search.php on line 68
+[10-Jun-2021 11:43:06 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/boolean_feature.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/boolean_feature.php on line 39
+[10-Jun-2021 17:19:55 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/type_aqar.php:36
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/type_aqar.php on line 36
+[11-Jun-2021 07:37:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/age_of_real_estate_num.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/age_of_real_estate_num.php on line 39
+[11-Jun-2021 15:09:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/advanced_search.php:1291
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/advanced_search.php on line 1291
+[11-Jun-2021 15:10:11 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/advanced_search.php:1291
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/advanced_search.php on line 1291
+[12-Jun-2021 05:47:34 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/lounges_num.php:39
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/lounges_num.php on line 39
+[12-Jun-2021 08:29:47 UTC] PHP Fatal error:  Uncaught Error: Call to a member function fetch_assoc() on bool in /home/tadawl/public_html/API/api_app/search/space.php:38
+Stack trace:
+#0 {main}
+  thrown in /home/tadawl/public_html/API/api_app/search/space.php on line 38
