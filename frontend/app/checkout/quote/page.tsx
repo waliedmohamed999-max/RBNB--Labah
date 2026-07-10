@@ -5,7 +5,7 @@ import { SiteNavbar } from "@/components/sections/site-navbar";
 import { BookingCompletionForm } from "@/components/checkout/booking-completion-form";
 import { getBookingQuote, getProfile, getPublicSystemSettings, getSessionUser } from "@/lib/api";
 import { resolveBrand } from "@/lib/brand";
-import { SAUDI_RIYAL_SYMBOL } from "@/lib/presentation";
+import { formatMoney } from "@/lib/presentation";
 import { getEnabledPaymentMethods, getPaymentMethods } from "@/lib/payment-methods";
 
 type CheckoutQuotePageProps = {
@@ -14,11 +14,6 @@ type CheckoutQuotePageProps = {
 
 function valueOf(param?: string | string[]) {
   return Array.isArray(param) ? param[0] ?? "" : param ?? "";
-}
-
-function formatMoney(value: number, currency: string) {
-  const normalizedCurrency = ["SR", "SAR", "ر.س", "ريال", "ريال سعودي", "رس", "⃁"].includes(currency) ? SAUDI_RIYAL_SYMBOL : currency;
-  return `${Number(value).toLocaleString("ar-SA")} ${normalizedCurrency}`;
 }
 
 export default async function CheckoutQuotePage({

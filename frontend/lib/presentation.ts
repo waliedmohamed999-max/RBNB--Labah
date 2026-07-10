@@ -23,6 +23,13 @@ export function formatMoney(value?: number | null, currency = SAUDI_RIYAL_SYMBOL
   return `${amount.toLocaleString("ar-SA")} ${normalizedCurrency}`;
 }
 
+export function formatDate(value?: string | null, options: Intl.DateTimeFormatOptions = { dateStyle: "medium" }) {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat("ar-SA", options).format(date);
+}
+
 export function formatRating(value?: number | null) {
   return value && value > 0 ? value.toFixed(1) : "جديد";
 }

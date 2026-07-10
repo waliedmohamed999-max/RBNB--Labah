@@ -45,7 +45,7 @@ import type {
 } from "@/lib/api";
 import { secureFetch } from "@/lib/client-security";
 import { parseMultilingualText } from "@/lib/parse-multilingual-text";
-import { FALLBACK_LISTING_IMAGE, normalizeAssetUrl } from "@/lib/presentation";
+import { FALLBACK_LISTING_IMAGE, formatMoney, normalizeAssetUrl } from "@/lib/presentation";
 
 type BookingsModuleProps = {
   initialBookings: BridgeBookingsResponse | null;
@@ -118,10 +118,6 @@ const paymentLabels: Record<string, string> = {
 
 function cleanTitle(value?: string | null) {
   return parseMultilingualText(value, "ar") || "حجز بدون عنوان";
-}
-
-function formatMoney(value?: number | null) {
-  return `${Number(value ?? 0).toLocaleString("ar-SA")} ر.س`;
 }
 
 function formatDate(value?: string | null, withTime = false) {

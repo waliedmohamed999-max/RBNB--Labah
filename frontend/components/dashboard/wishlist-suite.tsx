@@ -33,7 +33,7 @@ import {
 import type { BridgeSessionUser, BridgeWishlistItem } from "@/lib/api";
 import { secureFetch } from "@/lib/client-security";
 import { parseMultilingualText } from "@/lib/parse-multilingual-text";
-import { FALLBACK_LISTING_IMAGE, normalizeAssetUrl } from "@/lib/presentation";
+import { FALLBACK_LISTING_IMAGE, formatMoney, normalizeAssetUrl } from "@/lib/presentation";
 
 type WishlistSuiteProps = {
   currentUser: BridgeSessionUser;
@@ -61,10 +61,6 @@ function titleOf(item: BridgeWishlistItem) {
 
 function locationOf(item: BridgeWishlistItem) {
   return item.city || "المملكة العربية السعودية";
-}
-
-function formatMoney(value?: number | null) {
-  return `${Number(value ?? 0).toLocaleString("ar-SA")} ر.س`;
 }
 
 function itemHref(item: BridgeWishlistItem) {

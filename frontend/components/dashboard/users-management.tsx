@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import { Download, ShieldCheck, Sparkles, UserCog, Users } from "lucide-react";
 import { secureFetch } from "@/lib/client-security";
+import { formatDate } from "@/lib/presentation";
 import type { BridgeDashboardUsersResponse, BridgeDashboardUserDetail, BridgeDashboardUserStats } from "@/lib/api";
 import {
   ActivityTimeline,
@@ -63,13 +64,6 @@ function firstValue(value: string | string[] | undefined) {
 
 function formatNumber(value = 0) {
   return new Intl.NumberFormat("en-US").format(value);
-}
-
-function formatDate(value?: string) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium" }).format(date);
 }
 
 export function UsersManagement({ users, stats, filters }: UsersManagementProps) {

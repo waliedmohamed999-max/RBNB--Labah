@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 import type { BridgeManagedServiceItem, BridgeManagedServicesResponse } from "@/lib/api";
 import { secureFetch } from "@/lib/client-security";
-import { FALLBACK_LISTING_IMAGE, normalizeAssetUrl } from "@/lib/presentation";
+import { FALLBACK_LISTING_IMAGE, formatMoney, normalizeAssetUrl } from "@/lib/presentation";
 
 type ManagedHomesSuiteProps = {
   managed: BridgeManagedServicesResponse | null;
@@ -54,10 +54,6 @@ const statusMeta: Record<string, { label: string; className: string; dot: string
   draft: { label: "مسودة", className: "border-gray-100 bg-gray-50 text-gray-600", dot: "bg-gray-400" },
   trash: { label: "محذوف", className: "border-red-100 bg-red-50 text-red-600", dot: "bg-red-500" },
 };
-
-function formatMoney(value?: number | null) {
-  return `${Number(value ?? 0).toLocaleString("ar-SA")} ر.س`;
-}
 
 function publicHomePath(item: BridgeManagedServiceItem) {
   return item.public_url || `/home/${item.id}/${item.slug || "details"}`;

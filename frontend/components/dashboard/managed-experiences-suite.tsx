@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import type { BridgeManagedServiceItem, BridgeManagedServicesResponse } from "@/lib/api";
 import { secureFetch } from "@/lib/client-security";
-import { FALLBACK_LISTING_IMAGE, normalizeAssetUrl } from "@/lib/presentation";
+import { FALLBACK_LISTING_IMAGE, formatMoney, normalizeAssetUrl } from "@/lib/presentation";
 
 type ManagedExperiencesSuiteProps = {
   managed: BridgeManagedServicesResponse | null;
@@ -72,10 +72,6 @@ const toolLinks: Array<{ href: string; label: string; icon: LucideIcon }> = [
   { href: "/dashboard/services/experiences/inclusions", label: "المميزات", icon: CheckCircle2 },
   { href: "/dashboard/services/experiences/exclusions", label: "الاستثناءات", icon: X },
 ];
-
-function formatMoney(value?: number | null) {
-  return `${Number(value ?? 0).toLocaleString("ar-SA")} ر.س`;
-}
 
 function publicExperiencePath(item: BridgeManagedServiceItem) {
   return item.public_url || `/experience/${item.id}/${item.slug || "details"}`;

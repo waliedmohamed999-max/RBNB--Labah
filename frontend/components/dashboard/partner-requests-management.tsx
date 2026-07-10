@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 import type { ReactNode } from "react";
 import { Building2, CalendarDays, ClipboardCheck, Handshake, Mail, Phone, ShieldCheck, Sparkles } from "lucide-react";
 import { secureFetch } from "@/lib/client-security";
+import { formatDate } from "@/lib/presentation";
 import type { BridgeDashboardUsersResponse, BridgePartnerRequestDetail, BridgePartnerStats } from "@/lib/api";
 import {
   ActivityTimeline,
@@ -31,13 +32,6 @@ function firstValue(value: string | string[] | undefined) {
 
 function formatNumber(value = 0) {
   return new Intl.NumberFormat("en-US").format(value);
-}
-
-function formatDate(value?: string) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium" }).format(date);
 }
 
 const statusOptions = [

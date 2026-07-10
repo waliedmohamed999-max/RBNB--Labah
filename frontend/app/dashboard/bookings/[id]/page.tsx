@@ -14,18 +14,13 @@ import { CancelBookingButton } from "@/components/dashboard/cancel-booking-butto
 import { ConfirmBookingButton } from "@/components/dashboard/confirm-booking-button";
 import { InvoiceActions } from "@/components/dashboard/invoice-actions";
 import { getDashboardBookingDetail } from "@/lib/api";
-import { SAUDI_RIYAL_SYMBOL } from "@/lib/presentation";
+import { formatMoney } from "@/lib/presentation";
 
 type BookingDetailPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
-
-function formatMoney(value: number, currency: string) {
-  const normalizedCurrency = ["SR", "SAR", "ر.س", "ريال", "ريال سعودي", "رس", "⃁"].includes(currency) ? SAUDI_RIYAL_SYMBOL : currency;
-  return `${Number(value).toLocaleString("ar-SA")} ${normalizedCurrency}`;
-}
 
 export default async function DashboardBookingDetailPage({
   params,

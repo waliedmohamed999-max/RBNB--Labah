@@ -3,12 +3,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { getDashboardPayoutDetail } from "@/lib/api";
-import { SAUDI_RIYAL_SYMBOL } from "@/lib/presentation";
-
-function formatMoney(value: number, currency: string) {
-  const normalizedCurrency = ["SR", "SAR", "ر.س", "ريال", "ريال سعودي", "رس", "⃁"].includes(currency) ? SAUDI_RIYAL_SYMBOL : currency;
-  return `${Number(value).toLocaleString("ar-SA")} ${normalizedCurrency}`;
-}
+import { formatMoney } from "@/lib/presentation";
 
 export default async function DashboardPayoutDetailPage({
   params,

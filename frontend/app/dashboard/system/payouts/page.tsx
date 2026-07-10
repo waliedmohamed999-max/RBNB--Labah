@@ -21,7 +21,7 @@ import {
 import { PayoutItemActions } from "@/components/dashboard/payout-item-actions";
 import { FinanceActionButton, type FinanceQuickAction } from "@/components/dashboard/finance-action-button";
 import { getDashboardFinanceStats, getDashboardPayouts } from "@/lib/api";
-import { SAUDI_RIYAL_SYMBOL } from "@/lib/presentation";
+import { formatMoney, SAUDI_RIYAL_SYMBOL } from "@/lib/presentation";
 
 type DashboardPayoutsPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -29,13 +29,6 @@ type DashboardPayoutsPageProps = {
 
 function firstValue(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] || "" : value || "";
-}
-
-function formatMoney(value: number, currency = SAUDI_RIYAL_SYMBOL) {
-  const normalizedCurrency = ["SR", "SAR", "ر.س", "ريال", "ريال سعودي", "رس", "⃁"].includes(currency)
-    ? SAUDI_RIYAL_SYMBOL
-    : currency;
-  return `${Number(value || 0).toLocaleString("ar-SA")} ${normalizedCurrency}`;
 }
 
 function statusLabel(status: string) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { secureFetch } from "@/lib/client-security";
+import { formatDate, formatMoney } from "@/lib/presentation";
 import type { PaymentMethod, PaymentMethodKey } from "@/lib/payment-methods";
 import {
   AlertTriangle,
@@ -132,16 +133,6 @@ const defaultSettings: PaymentSettings = {
   payoutSchedule: "monthly",
   minPayout: 500,
 };
-
-function money(value: number) {
-  return `${Number(value || 0).toLocaleString("ar-SA")} ر.س`;
-}
-
-function relativeDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return value;
-  return new Intl.DateTimeFormat("ar-SA", { dateStyle: "medium", timeStyle: "short" }).format(date);
-}
 
 function statusLabel(status: string) {
   const labels: Record<string, string> = {
@@ -446,10 +437,10 @@ export function PaymentMethodsManager({ initialMethods }: { initialMethods: Paym
 
       <main className="space-y-6 p-4 lg:p-8">
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          <StatCard title="إجمالي الإيرادات" value={money(stats.totalRevenue)} sub="0% هذا الشهر" icon={ArrowUpRight} />
-          <StatCard title="معاملات اليوم" value={money(stats.todayRevenue)} sub={`${stats.todayTransactions} معاملة`} icon={Receipt} />
-          <StatCard title="قيد المراجعة" value={money(stats.pending)} sub={`${stats.pendingCount} معاملات`} icon={AlertTriangle} />
-          <StatCard title="مسترجعة" value={money(stats.refunded)} sub={`${stats.refundedCount} معاملات`} icon={ArrowDownLeft} />
+          <StatCard title="إجمالي الإيرادات" value={formatMoney(stats.totalRevenue)} sub="0% هذا الشهر" icon={ArrowUpRight} />
+          <StatCard title="معاملات اليوم" value={formatMoney(stats.todayRevenue)} sub={`${stats.todayTransactions} معاملة`} icon={Receipt} />
+          <StatCard title="قيد المراجعة" value={formatMoney(stats.pending)} sub={`${stats.pendingCount} معاملات`} icon={AlertTriangle} />
+          <StatCard title="مسترجعة" value={formatMoney(stats.refunded)} sub={`${stats.refundedCount} معاملات`} icon={ArrowDownLeft} />
         </section>
 
         <nav className="flex gap-2 overflow-x-auto rounded-2xl border border-gray-100 bg-white p-2 shadow-sm">
@@ -532,9 +523,9 @@ export function PaymentMethodsManager({ initialMethods }: { initialMethods: Paym
               </div>
               <MiniAreaChart data={chart} />
               <div className="grid gap-3 md:grid-cols-3">
-                <div className="rounded-xl bg-gray-50 p-4 text-sm">إجمالي الإيرادات: <b>{money(stats.totalRevenue)}</b></div>
-                <div className="rounded-xl bg-gray-50 p-4 text-sm">إجمالي المستردات: <b>{money(filteredRefundSummary.total)}</b></div>
-                <div className="rounded-xl bg-gray-50 p-4 text-sm">الصافي: <b>{money(stats.totalRevenue - filteredRefundSummary.total)}</b></div>
+                <div className="rounded-xl bg-gray-50 p-4 text-sm">إجمالي الإيرادات: <b>{formatMoney(stats.totalRevenue)}</b></div>
+                <div className="rounded-xl bg-gray-50 p-4 text-sm">إجمالي المستردات: <b>{formatMoney(filteredRefundSummary.total)}</b></div>
+                <div className="rounded-xl bg-gray-50 p-4 text-sm">الصافي: <b>{formatMoney(stats.totalRevenue - filteredRefundSummary.total)}</b></div>
               </div>
             </div>
             <div className="space-y-5">
@@ -764,11 +755,11 @@ function TransactionsTab({
       <DataTable
         headers={["التاريخ", "رقم الحجز", "العميل", "الحالة", "المبلغ", "البوابة", "الإجراءات"]}
         rows={transactions.map((transaction) => [
-          relativeDate(transaction.date),
+          formatDate(transaction.date, { dateStyle: "medium", timeStyle: "short" }),
           transaction.bookingId,
           <div key="customer" className="flex items-center gap-2"><Avatar name={transaction.customer} /><span>{transaction.customer}</span></div>,
           <Badge key="status" status={transaction.status} />,
-          <b key="amount">{money(transaction.amount)}</b>,
+          <b key="amount">{formatMoney(transaction.amount)}</b>,
           methods.find((method) => method.key === transaction.gateway)?.label ?? transaction.gateway,
           <button key="actions" type="button" onClick={() => onSelect(transaction)} className="rounded-xl border border-gray-200 px-3 py-2 text-xs font-bold">عرض</button>,
         ])}
@@ -781,19 +772,19 @@ function RefundsTab({ refunds, summary, onOpen }: { refunds: RefundRequest[]; su
   return (
     <section className="space-y-5">
       <div className="grid gap-4 md:grid-cols-3">
-        <StatCard title="إجمالي المستردات" value={money(summary.total)} sub="كل الفترات" icon={RefreshCw} />
-        <StatCard title="هذا الشهر" value={money(summary.month)} sub="طلبات نشطة" icon={ArrowDownLeft} />
+        <StatCard title="إجمالي المستردات" value={formatMoney(summary.total)} sub="كل الفترات" icon={RefreshCw} />
+        <StatCard title="هذا الشهر" value={formatMoney(summary.month)} sub="طلبات نشطة" icon={ArrowDownLeft} />
         <StatCard title="معدل الاسترداد" value={`${summary.rate}%`} sub="من إجمالي المدفوعات" icon={SlidersHorizontal} />
       </div>
       <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
         <DataTable
           headers={["التاريخ", "رقم الحجز", "العميل", "الحالة", "المبلغ", "السبب", "الإجراءات"]}
           rows={refunds.map((refund) => [
-            relativeDate(refund.date),
+            formatDate(refund.date, { dateStyle: "medium", timeStyle: "short" }),
             refund.bookingId,
             refund.customer,
             <Badge key="status" status={refund.status} />,
-            <b key="amount">{money(refund.amount)}</b>,
+            <b key="amount">{formatMoney(refund.amount)}</b>,
             refund.reason,
             <button key="actions" type="button" onClick={() => onOpen(refund)} className="rounded-xl bg-[#1a1f36] px-3 py-2 text-xs font-bold text-white">معالجة</button>,
           ])}
@@ -830,10 +821,10 @@ function PayoutsTab({
   return (
     <section className="space-y-5">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard title="مستحق للدفع" value={money(summary.due)} sub="جاهز للتحويل" icon={HandCoins} />
-        <StatCard title="تم تحويله" value={money(summary.paid)} sub="إجمالي سابق" icon={Check} />
-        <StatCard title="قيد المعالجة" value={money(summary.processing)} sub="بانتظار البنك" icon={Building2} />
-        <StatCard title="الشهر الحالي" value={money(summary.month)} sub="مستحقات شهرية" icon={Banknote} />
+        <StatCard title="مستحق للدفع" value={formatMoney(summary.due)} sub="جاهز للتحويل" icon={HandCoins} />
+        <StatCard title="تم تحويله" value={formatMoney(summary.paid)} sub="إجمالي سابق" icon={Check} />
+        <StatCard title="قيد المعالجة" value={formatMoney(summary.processing)} sub="بانتظار البنك" icon={Building2} />
+        <StatCard title="الشهر الحالي" value={formatMoney(summary.month)} sub="مستحقات شهرية" icon={Banknote} />
       </div>
       <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
         <DataTable
@@ -841,8 +832,8 @@ function PayoutsTab({
           rows={payouts.map((payout) => [
             <div key="partner" className="flex items-center gap-2"><Avatar name={payout.partner} /><span>{payout.partner}</span></div>,
             payout.listings,
-            money(payout.totalRevenue),
-            <b key="due" className={payout.due > 0 ? "text-[#FF385C]" : "text-gray-700"}>{money(payout.due)}</b>,
+            formatMoney(payout.totalRevenue),
+            <b key="due" className={payout.due > 0 ? "text-[#FF385C]" : "text-gray-700"}>{formatMoney(payout.due)}</b>,
             payout.lastPayout,
             <button key="actions" type="button" onClick={() => onOpen(payout)} className="rounded-xl bg-[#1a1f36] px-3 py-2 text-xs font-bold text-white">تحويل الآن</button>,
           ])}
@@ -968,7 +959,7 @@ function TransactionDrawer({ transaction, methods, onClose }: { transaction: Tra
         <div className="mt-6 grid gap-4">
           <div className="rounded-2xl bg-gray-50 p-5">
             <p className="text-sm text-gray-500">المبلغ</p>
-            <p className="mt-2 text-3xl font-bold">{money(transaction.amount)}</p>
+            <p className="mt-2 text-3xl font-bold">{formatMoney(transaction.amount)}</p>
           </div>
           <div className="grid gap-3">
             {["إنشاء المعاملة", "إرسال للبوابة", "استجابة البوابة", "تأكيد الدفع"].map((item, index) => (
@@ -1015,7 +1006,7 @@ function InfoGrid({ items }: { items: Array<[string, string]> }) {
 function RefundModal({ refund, onClose, onConfirm }: { refund: RefundRequest; onClose: () => void; onConfirm: (status: RefundRequest["status"]) => void }) {
   return (
     <Modal title="معالجة الاسترداد" onClose={onClose}>
-      <InfoGrid items={[["رقم الحجز", refund.bookingId], ["العميل", refund.customer], ["المبلغ الأصلي", money(refund.amount)], ["السبب", refund.reason]]} />
+      <InfoGrid items={[["رقم الحجز", refund.bookingId], ["العميل", refund.customer], ["المبلغ الأصلي", formatMoney(refund.amount)], ["السبب", refund.reason]]} />
       <Input label="مبلغ الاسترداد" value={String(refund.amount)} onChange={() => undefined} ltr />
       <Textarea label="ملاحظة داخلية" value="" onChange={() => undefined} />
       <div className="flex flex-wrap gap-3">
@@ -1029,7 +1020,7 @@ function RefundModal({ refund, onClose, onConfirm }: { refund: RefundRequest; on
 function PayoutModal({ payout, onClose, onConfirm }: { payout: PartnerPayout; onClose: () => void; onConfirm: () => void }) {
   return (
     <Modal title="تحويل للشريك" onClose={onClose}>
-      <InfoGrid items={[["الشريك", payout.partner], ["الحسابات", String(payout.listings)], ["إجمالي الإيرادات", money(payout.totalRevenue)], ["المستحق", money(payout.due)]]} />
+      <InfoGrid items={[["الشريك", payout.partner], ["الحسابات", String(payout.listings)], ["إجمالي الإيرادات", formatMoney(payout.totalRevenue)], ["المستحق", formatMoney(payout.due)]]} />
       <Input label="المبلغ المراد تحويله" value={String(payout.due)} onChange={() => undefined} ltr />
       <Input label="مرجع التحويل" value={`PAY-${Date.now()}`} onChange={() => undefined} ltr />
       <Textarea label="ملاحظة التحويل" value="تحويل مستحقات الشريك من لوحة الدفع." onChange={() => undefined} />
@@ -1095,7 +1086,7 @@ function TopCustomers({ transactions }: { transactions: Transaction[] }) {
           <div key={name} className="flex items-center justify-between rounded-xl border border-gray-100 p-3">
             <div className="flex items-center gap-2"><Avatar name={name} /><span className="font-bold">{name}</span></div>
             <div className="text-left text-sm">
-              <b>{money(total)}</b>
+              <b>{formatMoney(total)}</b>
               <p className="text-xs text-gray-500">{count} معاملات</p>
             </div>
           </div>
