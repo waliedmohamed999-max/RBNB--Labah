@@ -30,4 +30,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Read here (a cached config/*.php file) rather than via env() inside
+    // app/Helpers/api.php, since env() calls outside config files return null
+    // after `php artisan config:cache` runs in production.
+    'legacy_api' => [
+        'jwt_secret' => env('LEGACY_API_JWT_SECRET'),
+    ],
+
 ];
