@@ -1,0 +1,25 @@
+# Scoped to build context = public_html/ (Render Root Directory: public_html)
+public_html
+labayh_app
+tests
+phpunit.xml
+gulpfile.js
+package.json
+package-lock.json
+node_modules
+server.php
+start-local-server.bat
+laravel-server.log
+laravel-server.err.log
+website.zip
+readme.md
+composer.phar
+deploy/hostinger
+DEPLOYMENT_HOSTINGER.md
+.env
+vendor
+bootstrap/cache/*.php
+storage/framework/cache
+storage/framework/sessions
+storage/framework/views
+storage/logs
